@@ -2,7 +2,7 @@
 ++--------------------------++
 
 to Avoid getting Error:
-    install the requirements in the requirements.txt or run
+    install the requirements in the requirements.txt
 
     Open your Terminal/CMD then
     navigate to the requirements.txt folder then type 
