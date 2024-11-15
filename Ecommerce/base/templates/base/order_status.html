@@ -1,0 +1,36 @@
+{% extends 'master.html' %}
+
+{% block content %}
+    <h2>Order Status for Order #{{ order.id }}</h2>
+
+    <p><strong>Order Status:</strong> {{ order.status }}</p>
+
+    {% if shipping %}
+        <h3>Shipping Information:</h3>
+        <p><strong>Shipping Status:</strong> {{ shipping.shipping_status }}</p>
+        <p><strong>Tracking Number:</strong> {{ shipping.tracking_number }}</p>
+        <p><strong>Tracking Number:</strong> {{ shipping.shipping_method }}</p>
+        <p><strong>Shipping Date:</strong> {{ shipping.shipping_date }}</p>
+        {% if shipping.shipping_status == 'Delivered' %}
+            <p>Your order has been delivered!</p>
+        {% elif shipping.shipping_status == 'Shipped' %}
+            <p>Your order is on the way! Track it with the tracking number.</p>
+        {% elif shipping.shipping_status == 'Not Shipped' %}
+            <p>Your order has not been shipped yet. Please check back later.</p>
+        {% endif %}
+        
+        <h3>Products in this Order:</h3>
+        <ul>
+            {% for item in order_items %}
+                <li>{{ item.product.name }} - {{ item.quantity }}x ₱{{ item.product.price }} <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}"> </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No shipping information available for this order yet.</p>
+    {% endif %}
+
+    <a href="{% url 'order_list' %}">Back to your Orders</a>
+{% endblock %}
+
+    
+    

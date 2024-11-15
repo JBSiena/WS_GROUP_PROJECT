@@ -1,0 +1,5 @@
+# THIS IS THE REQUIREMENTS FOR THIS PROJECT
+
+django == 5.1.3
+Pillow == 11.0.0
+WhiteNoise == 6.8.2

@@ -1,0 +1,15 @@
+{% load static %}
+<a href="/"> <h1> LOGO </h1> </a>
+
+<h1>18 Plus</h1>
+{% if user.profile.image %}
+    <img src=" {{ user.profile.image.url }} " alt="{{ user.username }} profile">
+{% else %}
+    <img src="media/images/user/dp.png" alt="Image">
+{% endif %}
+
+{% if user.is_authenticated %}
+    <a href="{{ user.profile.id }}"> {{ user.username }} </a>
+{% else %}
+    <span> Guest User </span>
+{% endif %}
