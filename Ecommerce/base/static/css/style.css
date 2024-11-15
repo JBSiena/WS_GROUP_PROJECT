@@ -1,0 +1,127 @@
+
+body {
+
+    font-family: 'Inter', 'Inria Serif';
+    font-size: 1rem;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    min-width: 100vw;
+    min-height: 100vh;
+    
+}
+
+/* NAVIGATION STYLES */
+.navigation-bar{
+
+    position: absolute;
+    width: 329px;
+    height: 1080px;
+    left: 0px;
+    top: 0px;
+    background: #F0F0F0;   
+}
+
+.logo-wrapper{
+
+    position: absolute;
+    width: 265px;
+    height: 90px;
+    left: 30px;
+    top: 29px;
+
+}
+
+.logo-wrapper img{
+
+    position: absolute;
+    width: 99px;
+    height: 90px;
+
+}
+
+.logo-wrapper h1{
+
+    position: absolute;
+    left: 110px;
+    font-family: 'Inria Serif',sans-serif;
+    font-weight: 500;
+    font-size: 2.5rem;
+    color: #000000;
+
+}
+
+.line{
+
+    position: absolute;
+    width: 294px;
+    height: 0px;
+    left: 15px;
+    top: 150px;
+    border: 1px solid #858585;
+
+}
+
+.profile-wrapper{
+
+    position: absolute;
+    width: 280px;
+    height: 85px;
+    left: 34px;
+    top: 200px;
+
+}
+
+.profile-wrapper img{
+
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 1px solid black;
+
+}
+
+.profile-wrapper span{
+
+    position: absolute;
+    text-transform: capitalize;
+    font-weight: 300;
+    font-size: 1.3rem;
+    color: #000000;
+    left: 100px;
+    top: 35px;
+
+}
+
+.navigation-content{
+
+    position: absolute;
+    width: 251px;
+    height: 300px;
+    left: 40px;
+    top: 342px;
+
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: column;
+}
+
+.navigation-content a{
+
+    text-decoration: none;
+    color: #000000;
+    margin-left: 10px;
+}
+/* END NAVIGATION STYLES */
+
+/* HOME STYLE */
+
+.home-wrapper{
+    height: 100vh;
+    position: relative;
+    left: 350px;
+    width: 70vw;
+}
+
+/* END HOME STYLE */
