@@ -10,54 +10,68 @@
 
         <div class="line"></div>
     
-        <div class="profile-wrapper">
+        {% if not change_navbar %}
+            {% if user.is_authenticated %}
+            <div class="profile-wrapper">
 
-            {% if user.profile.image %}
-                <img src=" {{ user.profile.image.url }} " alt="{{ user.username }} profile">
+                {% if user.profile.image %}
+                    <img src=" {{ user.profile.image.url }} " alt="{{ user.username }} profile">
+                {% else %}
+                    <img src="media/images/user/dp.png" alt="Image">
+                {% endif %}
+            
+
+                {% if user.name %}
+                    <span> {{ user.username }} </span>
+                {% else %}
+                    <span> Guest User </span>
+                {% endif %}
+
+            </div>
+
+            <div class="navigation-content">
+                <div>
+                    <i class="fa-solid fa-house"></i><a href="/"> Home </a>
+                </div>
+
+                <div>
+                    <i class="fa-solid fa-user"></i><a href="{% url 'edit_profile' user.profile.id %}"> Profile </a>
+                </div>
+
+                <div>
+                    <i class="fa-solid fa-location-dot"></i><a href="{% url 'address' user.profile.id %}"> Address </a>
+                </div>
+
+                <div>
+                    <i class="fa-solid fa-cart-shopping"></i><a href="{% url 'delivered_items' %}"> Purchased History </a>
+                </div>
+
+                <div>
+                    <i class="fa-solid fa-cart-plus"></i><a href="{% url 'view_cart' %}"> Cart </a>
+                </div>
+
+                <div>
+                    <i class="fa-solid fa-phone"></i><a href="/"> Contact Us </a>
+                </div>
+
+                <div>
+                    <i class="fa-solid fa-gear"></i><a href="/"> Settings </a>
+                </div>
+
+            </div>
+
             {% else %}
-                <img src="media/images/user/dp.png" alt="Image">
+                <div class="suggestion-content">
+                    <h3>Categories</h3>
+                    <ul>
+                        {% for cat in categories %}
+                        <li>{{ cat.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
             {% endif %}
-        
-
-            {% if user.name %}
-                <span> {{ user.username }} </span>
-            {% else %}
-                <span> Guest User </span>
-            {% endif %}
-
-        </div>
-
-        <div class="navigation-content">
-            <div>
-                <i class="fa-solid fa-house"></i><a href="/"> Home </a>
-            </div>
-
-            <div>
-                <i class="fa-solid fa-user"></i><a href="{% url 'edit_profile' user.profile.id %}"> Profile </a>
-            </div>
-
-            <div>
-                <i class="fa-solid fa-location-dot"></i><a href="{% url 'address' user.profile.id %}"> Address </a>
-            </div>
-
-            <div>
-                <i class="fa-solid fa-cart-shopping"></i><a href="{% url 'delivered_items' %}"> Purchased History </a>
-            </div>
-
-            <div>
-                <i class="fa-solid fa-cart-plus"></i><a href="{% url 'view_cart' %}"> Cart </a>
-            </div>
-
-            <div>
-                <i class="fa-solid fa-phone"></i><a href="/"> Contact Us </a>
-            </div>
-
-            <div>
-                <i class="fa-solid fa-gear"></i><a href="/"> Settings </a>
-            </div>
-
-        </div>
-
+        {% endif %}
     </div>
 
 {% endblock content %}
+

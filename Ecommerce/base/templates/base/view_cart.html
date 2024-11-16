@@ -1,4 +1,5 @@
 {% extends 'master.html' %}
+{% load humanize %}
 
 {% block content %}
 
@@ -21,8 +22,8 @@
                         <tr>
                             <td>{{ item.product.name }}</td>
                             <td>{{ item.quantity }}</td>
-                            <td>₱{{ item.product.price }}</td>
-                            <td>₱{{ item.total_price }}</td>
+                            <td>₱ {{ item.product.price | intcomma }}</td>
+                            <td>₱ {{ item.total_price | intcomma }}</td>
                             <td>
                                 <!-- Form for removing the cart item -->
                                 <form method="POST" action="{% url 'remove_from_cart' item.id %}">
@@ -38,7 +39,8 @@
                 </tbody>
             </table>
 
-            <h3>Total Price: ₱{{ total_price }}</h3>
+            <h3>Total Price: ₱ {{ total_price | intcomma }}</h3>
+            <a href="{% url 'order_list' %}">Order List</a><br>
 
         {% else %}
             <p>Your cart is empty.</p>

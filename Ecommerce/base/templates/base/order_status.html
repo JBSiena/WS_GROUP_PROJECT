@@ -1,4 +1,5 @@
 {% extends 'master.html' %}
+{% load humanize %}
 
 {% block content %}
 
@@ -24,7 +25,7 @@
             <h3>Products in this Order:</h3>
             <ul>
                 {% for item in order_items %}
-                    <li>{{ item.product.name }} - {{ item.quantity }}x ₱{{ item.product.price }} <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}"> </li>
+                    <li>{{ item.product.name }} - {{ item.quantity }}x ₱ {{ item.product.price | intcomma }} <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}"> </li>
                 {% endfor %}
             </ul>
         {% else %}

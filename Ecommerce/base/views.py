@@ -10,7 +10,7 @@ from .forms import *
 # Home Page - Show all products
 def home(request):
     categories = Category.objects.all()
-    products = Product.objects.get(is_active=True)
+    products = Product.objects.filter(is_active=True)
     return render(request, 'base/home.html', {'categories': categories, 'products': products})
 
 
@@ -19,10 +19,20 @@ def home(request):
 def product_detail(request, pk):
     # Check if the user is logged in and if not redirect to login page
     if request.user.is_authenticated:
+        categories = Category.objects.all()
+        active_products = Product.objects.filter(is_active=True)
+        selected_products = random.sample(list(active_products), min(len(active_products), 10))
         product = get_object_or_404(Product, pk=pk)
-        return render(request, 'base/product_detail.html', {'product': product})
+
+        return render(request, 'base/product_detail.html', {
+            'categories': categories,
+            'products': selected_products,
+            'product': product,
+        })
     else:
         return redirect('login')
+    
+    
 
 # Add to Cart
 @login_required
@@ -36,16 +46,8 @@ def add_to_cart(request, pk):
     if not created:  # If it already exists, increase the quantity
         cart_item.quantity += 1
     cart_item.save()
-    return redirect('cart')
+    return redirect('view_cart')
  
-
-# Shopping Cart View
-@login_required
-def cart(request):
-    cart = ShoppingCart.objects.get(user=request.user)
-    items = CartItem.objects.filter(cart=cart)
-    total_price = cart.get_total_price()
-    return render(request, 'base/cart.html', {'cart': cart, 'items': items, 'total_price': total_price})
 
 # Checkout View
 @login_required
@@ -300,4 +302,5 @@ def user_login(request):
 # Logout view
 def user_logout(request):
     logout(request)
-    return redirect('home')  # Redirect to home page after logout
+    # return redirect('home',{'hide_navbar': True})  # Redirect to home page after logout
+    return redirect(home)  # Redirect to home page after logout

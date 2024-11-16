@@ -1,4 +1,5 @@
 {% extends 'master.html' %}
+{% load humanize %}
 
 {% block content %}
 
@@ -21,7 +22,7 @@
                         <tr>
                             <td>#{{ order.id }}</td>
                             <td>{{ order.status }}</td>
-                            <td>₱{{ order.total_price }}</td>
+                            <td>₱ {{ order.total_price | intcomma }}</td>
                             <td>{{ order.created_at|date:"Y-m-d H:i" }}</td>
                             <td>
                                 <a href="{% url 'order_status' order.id %}">View Details</a>

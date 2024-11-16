@@ -2,12 +2,44 @@
 {% extends "master.html" %}
 {% load humanize %}
 
+
 {% block content %}
-  <h1>{{ product.name }}</h1>
-  <img src="{{ product.image.url }}" alt="{{ product.name }}">
-  <p>{{ product.description }}</p>
-  <p>{{ product.price | intcomma }}</p>
-  <a href="{% url 'add_to_cart' product.pk %}"> Add to Cart </a><br>
-  <a href="{% url 'view_cart' %}"> View Cart </a><br>
-  <a href="{% url 'home' %}"> Continue Shopping </a>
+
+  {% include 'search.html' %}
+
+  <div class="home-wrapper">
+
+    <div class="categories">
+      <h3> Categories </h3>
+      <ul>
+        {% for category in categories %}
+          <li>{{ category.name }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="products">
+
+      {% if product %}
+        <img src="{{ product.image.url }}" alt="">
+        <div class="product-description">
+          <p>{{ product.name }}</p>
+          <p>{{ product.description }}</p>
+          <p>₱ {{ product.price | intcomma}}</p>
+          <a href="{% url 'add_to_cart' product.pk %}">Add to Cart</a>
+        </div>
+      {% endif %}
+
+    </div>
+
+    {% for suggested in selected %}
+    <div class="suggestion-wrapper">
+      <div class="suggested-product">
+        <img src="{{ suggested.image.uel }}" alt="{{ suggested.name }}">
+        <p> ₱ {{ suggested.price | intcomma }} </p>
+      </div>
+    </div>
+    {% endfor %}
+
+  </div>
 {% endblock %}

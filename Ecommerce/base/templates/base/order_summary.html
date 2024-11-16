@@ -1,32 +1,37 @@
 {% extends 'master.html' %}
+{% laod humanize %}
 
 {% block content %}
-    <h2>Order Confirmation</h2>
-    <p>Thank you for your order! Your order ID is #{{ order.id }}.</p>
-    <p>Status: {{ order.status }}</p>
-    <p>Total Price: ${{ order.total_price }}</p>
 
-    <h3>Order Details:</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>Product</th>
-                <th>Quantity</th>
-                <th>Price</th>
-                <th>Total</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in order.items.all %}
+    <div class="home-wrapper">
+        <h2>Order Confirmation</h2>
+        <p>Thank you for your order! Your order ID is #{{ order.id }}.</p>
+        <p>Status: {{ order.status }}</p>
+        <p>Total Price: ₱ {{ order.total_price | intcomma }}</p>
+
+        <h3>Order Details:</h3>
+        <table>
+            <thead>
                 <tr>
-                    <td>{{ item.product.name }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td>${{ item.product.price }}</td>
-                    <td>${{ item.total_price }}</td>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for item in order.items.all %}
+                    <tr>
+                        <td>{{ item.product.name }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>₱ {{ item.product.price | intcomma }}</td>
+                        <td>₱ {{ item.total_price | intcomma }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
-    <a href="{% url 'order_list' %}">View My Orders</a>
+        <a href="{% url 'order_list' %}">View My Orders</a>
+    </div>
+
 {% endblock %}

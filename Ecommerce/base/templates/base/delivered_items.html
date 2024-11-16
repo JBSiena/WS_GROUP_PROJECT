@@ -1,4 +1,5 @@
 {% extends 'master.html' %}
+{% load humanize %}
 
 {% block content %}
 
@@ -10,13 +11,13 @@
         {% else %}
             {% for order in delivered_orders %}
                 <h3>Order #{{ order.id }} - Status: {{ order.status }}</h3>
-                <p><strong>Total Price:</strong> ₱{{ order.total_price }}</p>
+                <p><strong>Total Price:</strong> ₱ {{ order.total_price | intcomma }}</p>
                 <p><strong>Shipping Address:</strong> {{ order.shipping_address }}</p>
                 <h4>Order Items:</h4>
                 <ul>
                     {% for item in order.items.all %}
                         <li>
-                            {{ item.product.name }} - {{ item.quantity }} x ₱{{ item.product.price }} = ₱{{ item.total_price }}
+                            {{ item.product.name }} - {{ item.quantity }} x ₱ {{ item.product.price | intcomma }} = ₱ {{ item.total_price | intcomma }}
                         </li>
                     {% endfor %}
                 </ul>
