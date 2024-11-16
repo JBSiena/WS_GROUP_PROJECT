@@ -11,6 +11,66 @@ body {
     
 }
 
+/* HOME STYLE */
+
+.home-wrapper{
+    height: 100vh;
+    position: relative;
+    left: 350px;
+    width: 1080px;
+    top: 200px;
+}
+
+
+.categories {
+
+    position: absolute;
+    width: 239px;
+    height: 289px;
+    left: 100px;
+    font-family: 'Inter';
+    font-weight: 300;
+
+}
+
+.categories h3{
+
+    font-family: 'Inter';
+    font-weight: 400;
+
+}
+
+.products {
+
+    position: absolute;
+    width: 802px;
+    height: 451px;
+    left: 400px;
+    top: 70px;
+
+}
+
+
+.products img{
+
+    position: absolute;
+    width: 308px;
+    height: 385px;
+    border-radius: 30px;
+
+}
+
+.product-description{
+
+    position: absolute;
+    width: 441px;
+    height: 449px;
+    left: 400px;
+
+}
+
+/* END HOME STYLE */
+
 /* NAVIGATION STYLES */
 .navigation-bar{
 
@@ -115,13 +175,78 @@ body {
 }
 /* END NAVIGATION STYLES */
 
-/* HOME STYLE */
 
-.home-wrapper{
-    height: 100vh;
-    position: relative;
-    left: 350px;
-    width: 70vw;
+/* SEARCH STYLE */
+
+.search-wrapper{
+    
+    position: absolute;
+    width: 1591px;
+    height: 162px;
+    left: 329px;
+    top: 0px;
+
 }
 
-/* END HOME STYLE */
+.search-wrapper h1{
+
+    position: absolute;
+    left: 150px;
+    top: 40px;
+    font-family: 'Inria Serif';
+    font-weight: 700;
+    font-size: 2.5rem;
+    color: #000000;
+
+}
+
+.search-field-wrapper{
+
+    position: absolute;
+    width: 721px;
+    height: 44px;
+    left: 450px;
+    top: 70px;
+
+}
+
+#search-field{
+
+    width: 721px;
+    height: 44px;
+
+}
+
+#search-button {
+
+    box-sizing: border-box;
+    background: none;
+    position: absolute;
+    width: 48px;
+    height: 44px;
+    border: 1px solid #000000;
+
+}
+
+.cart-notif {
+    display: flex;
+    justify-content: space-evenly;
+    position: absolute;
+    width: 150px;
+    height: max-content;
+    left: 1300px;
+    top: 70px;
+
+}
+
+.cart-notif button{
+
+    height: 45px;
+    width: 45px;
+    border: none;
+    background: none;
+
+}
+
+
+/* END SEARCH STYLE */

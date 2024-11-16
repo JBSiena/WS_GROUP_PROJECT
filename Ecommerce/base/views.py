@@ -10,8 +10,10 @@ from .forms import *
 # Home Page - Show all products
 def home(request):
     categories = Category.objects.all()
-    products = Product.objects.filter(is_active=True)
+    products = Product.objects.get(is_active=True)
     return render(request, 'base/home.html', {'categories': categories, 'products': products})
+
+
 
 # Product Detail
 def product_detail(request, pk):
