@@ -249,6 +249,22 @@ def edit_profile(request,pk):
 
     return render(request, 'base/edit_profile.html', {'form': form})
 
+@login_required
+def address(request,pk):
+    if request.method == 'POST':
+        user = Profile.objects.get(id=pk)
+        form = AddressForm(request.POST, instance=user)
+        
+        if form.is_valid():
+            form.save() # Save the New User Image
+            return redirect('home')
+
+    else:
+        user = Profile.objects.get(user=request.user, id=pk)
+        form = AddressForm(instance=user)
+
+    return render(request, 'base/address.html', {'form': form})
+
 
 # Register view
 def register(request):
@@ -264,7 +280,7 @@ def register(request):
     else:
         form = RegisterForm()
     
-    return render(request, 'base/register.html', {'form': form})
+    return render(request, 'base/register.html', {'form': form, 'hide_navbar': True})
 
 # Login view
 def user_login(request):
@@ -277,7 +293,7 @@ def user_login(request):
     else:
         form = AuthenticationForm()
 
-    return render(request, 'base/login.html', {'form': form})
+    return render(request, 'base/login.html', {'form': form, 'hide_navbar': True})
 
 # Logout view
 def user_logout(request):

@@ -28,4 +28,10 @@ class RegisterForm(forms.ModelForm):
 class EditProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['first_name', 'last_name', 'middle_name', 'phone_number', 'address', 'image']
+        fields = ['first_name', 'last_name', 'middle_name', 'phone_number', 'image']
+
+
+class AddressForm(forms.ModelForm):
+    class Meta:
+        model = Address
+        fields = ['street', 'city', 'purok', 'landmark']

@@ -11,14 +11,19 @@ class Profile(models.Model):
     middle_name = models.CharField(max_length=100, blank=True)
     last_name = models.CharField(max_length=100, default='User')
     phone_number = models.CharField(max_length=20)
-    address = models.TextField(max_length=1000)
     image = models.ImageField(upload_to='images/user/', blank=True, default='images/user/dp.png')
 
     def __str__(self):
         return f'{ self.last_name }, { self.first_name } { self.middle_name }.'
 
-    def upload_to(self):
-        return None
+    
+class Address(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    street = models.CharField(max_length=100)
+    city = models.CharField(max_length=100)
+    purok = models.CharField(max_length=100)
+    landmark = models.TextField(max_length=300, blank=True)
+
     
 # Category Model
 class Category(models.Model):

@@ -20,7 +20,8 @@ urlpatterns = [
     path('order-summary/<str:order_id>/', views.order_summary, name='order_summary'), # Order Summary before Checkout Page Url
     path('remove-from-cart/<str:cart_item_id>/', views.remove_from_cart, name='remove_from_cart'), #Remove the Item from Cart
     path('mark_order_as_delivered/<str:order_id>/', views.mark_order_as_delivered, name='mark_order_as_delivered'),
-    path('<int:pk>/', views.edit_profile, name='edit_profile'),
+    path('address/<str:pk>/', views.address, name='address'),
+    path('edit_profile/<int:pk>/', views.edit_profile, name='edit_profile'),
 
 ]
 
