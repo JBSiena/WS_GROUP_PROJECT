@@ -14,13 +14,14 @@ urlpatterns = [
     path('address/<str:pk>/', views.address, name='address'),
     path('place_order/', views.place_order, name='place_order'), # Place Order Page Url
     path('add-to-cart/<str:pk>', views.add_to_cart, name='add_to_cart'), # Add Item to Cart Page Url
-    path('product/<str:pk>/', views.product_detail, name='product_detail'), # Product Detail Page Url
+    path('product_detail/<str:pk>/', views.product_detail, name='product_detail'), # Product Detail Page Url
     path('delivered_items/', views.delivered_items, name='delivered_items'), # Delivered Items Page Url
     path('edit_profile/<int:pk>/', views.edit_profile, name='edit_profile'),
     path('order-status/<str:order_id>/', views.order_status, name='order_status'), # Order Delivery Status Page Url
     path('order-summary/<str:order_id>/', views.order_summary, name='order_summary'), # Order Summary before Checkout Page Url
     path('remove-from-cart/<str:cart_item_id>/', views.remove_from_cart, name='remove_from_cart'), #Remove the Item from Cart
     path('mark_order_as_delivered/<str:order_id>/', views.mark_order_as_delivered, name='mark_order_as_delivered'),
+    path('search_product/', views.search_product, name='search_product'),
 
 ]
 

@@ -4,61 +4,66 @@
     <div class="navigation-bar">
         
         <div class="logo-wrapper">
-            <a href="/"> <img src="{% static 'images/image.png' %}" alt="Logo"> </a>
-            <a href="/"> <h1>18 Plus</h1> </a>
+            <div>
+                <a href="/"> <img src="{% static 'images/image.png' %}" alt="Logo"> </a>
+            </div>
+            <div>
+                <a href="/"> <h1>18 Plus</h1> </a>
+            </div>
         </div>
 
         <div class="line"></div>
     
         {% if not change_navbar %}
             {% if user.is_authenticated %}
-            <div class="profile-wrapper">
+                <div class="profile-wrapper">
+                    <div>
+                        {% if user.profile.image %}
+                            <img src=" {{ user.profile.image.url }} " alt="{{ user.username }} profile">
+                        {% else %}
+                            <img src="media/images/user/dp.png" alt="Image">
+                        {% endif %}
+                    </div>
 
-                {% if user.profile.image %}
-                    <img src=" {{ user.profile.image.url }} " alt="{{ user.username }} profile">
-                {% else %}
-                    <img src="media/images/user/dp.png" alt="Image">
-                {% endif %}
-            
-
-                {% if user.name %}
-                    <span> {{ user.username }} </span>
-                {% else %}
-                    <span> Guest User </span>
-                {% endif %}
-
-            </div>
-
-            <div class="navigation-content">
-                <div>
-                    <i class="fa-solid fa-house"></i><a href="/"> Home </a>
+                    <div>
+                        {% if user.username %}
+                            <p> {{ user.profile.first_name }} {{ user.profile.last_name }}</p>
+                        {% else %}
+                            <span> Guest User </span>
+                        {% endif %}
+                    </div>
                 </div>
 
-                <div>
-                    <i class="fa-solid fa-user"></i><a href="{% url 'edit_profile' user.profile.id %}"> Profile </a>
-                </div>
+                <div class="navigation-content">
+                    <div>
+                        <i class="fa-solid fa-house"></i><a href="/"> Home </a>
+                    </div>
 
-                <div>
-                    <i class="fa-solid fa-location-dot"></i><a href="{% url 'address' user.profile.id %}"> Address </a>
-                </div>
+                    <div>
+                        <i class="fa-solid fa-user"></i><a href="{% url 'edit_profile' user.profile.id %}"> Profile </a>
+                    </div>
 
-                <div>
-                    <i class="fa-solid fa-cart-shopping"></i><a href="{% url 'delivered_items' %}"> Purchased History </a>
-                </div>
+                    <div>
+                        <i class="fa-solid fa-location-dot"></i><a href="{% url 'address' user.profile.id %}"> Address </a>
+                    </div>
 
-                <div>
-                    <i class="fa-solid fa-cart-plus"></i><a href="{% url 'view_cart' %}"> Cart </a>
-                </div>
+                    <div>
+                        <i class="fa-solid fa-cart-shopping"></i><a href="{% url 'delivered_items' %}"> Purchased History </a>
+                    </div>
 
-                <div>
-                    <i class="fa-solid fa-phone"></i><a href="/"> Contact Us </a>
-                </div>
+                    <div>
+                        <i class="fa-solid fa-cart-plus"></i><a href="{% url 'view_cart' %}"> Cart </a>
+                    </div>
 
-                <div>
-                    <i class="fa-solid fa-gear"></i><a href="/"> Settings </a>
-                </div>
+                    <div>
+                        <i class="fa-solid fa-phone"></i><a href="/"> Contact Us </a>
+                    </div>
 
-            </div>
+                    <div>
+                        <i class="fa-solid fa-gear"></i><a href="/"> Settings </a>
+                    </div>
+
+                </div>
 
             {% else %}
                 <div class="suggestion-content">

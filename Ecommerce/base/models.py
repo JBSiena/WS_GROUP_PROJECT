@@ -88,7 +88,7 @@ class Order(models.Model):
             return  # Do nothing if the order is not in a 'PENDING' state.
 
         # Generate a random number of days between 3 and 7 days
-        random_days = random.randint(1, 3)
+        random_days = random.randint(1, 2)
         delivery_date = self.created_at + timedelta(days=random_days)
 
         # Generate a random code for tracking_number
@@ -177,7 +177,7 @@ class Shipping(models.Model):
     
     def update_shipping_status(self):
         # Update shipping status based on the delivery date.
-        if self.shipping_date and timezone.now() > self.shipping_date:
+        if self.shipping_date and timezone.now() == self.shipping_date:
             self.shipping_status = 'Delivered'
             self.save()
     

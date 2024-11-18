@@ -7,39 +7,41 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from .forms import *
 
-# Home Page - Show all products
+# Home Page - Show products
 def home(request):
     categories = Category.objects.all()
-    products = Product.objects.filter(is_active=True)
-    return render(request, 'base/home.html', {'categories': categories, 'products': products})
+    active_products = Product.objects.filter(is_active=True)
+    selected_products = random.sample(list(active_products), min(len(active_products), 10))
 
-
+    return render(request, 'base/home.html', {
+        'categories': categories, 
+        'products': selected_products,
+        })
+    
+def search_product(request):
+    if request.method == 'POST':
+        searched = request.POST['searched']
+        products = Product.objects.filter(name__contains=searched)
+        return render(request, 'base/search_product.html', {
+            'searched':searched,
+            'products': products,
+            })
 
 # Product Detail
 def product_detail(request, pk):
-    # Check if the user is logged in and if not redirect to login page
-    if request.user.is_authenticated:
-        categories = Category.objects.all()
-        active_products = Product.objects.filter(is_active=True)
-        selected_products = random.sample(list(active_products), min(len(active_products), 10))
-        product = get_object_or_404(Product, pk=pk)
+    categories = Category.objects.all()
+    product_detail = get_object_or_404(Product, pk=pk)
 
-        return render(request, 'base/product_detail.html', {
-            'categories': categories,
-            'products': selected_products,
-            'product': product,
-        })
-    else:
-        return redirect('login')
-    
-    
+    return render(request, 'base/product_detail.html', {
+        'categories': categories,
+        'product_detail': product_detail,
+    })
 
 # Add to Cart
 @login_required
 def add_to_cart(request, pk):
     product = get_object_or_404(Product, pk=pk)
     cart, created = ShoppingCart.objects.get_or_create(user=request.user)
-    
     # Check if the product already exists in the cart
     cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
     
@@ -47,7 +49,6 @@ def add_to_cart(request, pk):
         cart_item.quantity += 1
     cart_item.save()
     return redirect('view_cart')
- 
 
 # Checkout View
 @login_required
@@ -102,10 +103,18 @@ def remove_from_cart(request, cart_item_id):
 @login_required
 def order_status(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
+    shipped_orders = Shipping.objects.all()
+
+    for shipping in shipped_orders:
+        shipping.update_shipping_status()
+        messages.success(request, f"Order Status Updated {order.status}.")
 
     # Get associated shipping and order items
     shipping = order.shipping
     order_items = order.items.all()
+
+    if order.status == Order.DELIVERED and order.created_at == Shipping.shipping_date:
+        shipping = Order.DELIVERED
 
     return render(request, 'base/order_status.html', {
         'order': order,
@@ -131,17 +140,6 @@ def create_shipping(request, order_id):
         messages.warning(request, "Shipping already exists for this order.")
 
     return redirect('view_order', order_id=order.id)
-
-@login_required
-def update_shipping_status(request):
-    # Get all orders that are shipped and update their status
-    shipped_orders = Shipping.objects.filter(shipping_status='Shipped')
-
-    for shipping in shipped_orders:
-        shipping.update_shipping_status()
-
-    messages.success(request, "Shipping statuses have been updated!")
-    return redirect('delivered_items')
 
 @login_required
 def place_order(request):

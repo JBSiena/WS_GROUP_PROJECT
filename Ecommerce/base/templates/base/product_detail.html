@@ -20,13 +20,13 @@
 
     <div class="products">
 
-      {% if product %}
-        <img src="{{ product.image.url }}" alt="">
+      {% if product_detail %}
+        <img src="{{ product_detail.image.url }}" alt="">
         <div class="product-description">
-          <p>{{ product.name }}</p>
-          <p>{{ product.description }}</p>
-          <p>₱ {{ product.price | intcomma}}</p>
-          <a href="{% url 'add_to_cart' product.pk %}">Add to Cart</a>
+          <p>{{ product_detail.name }}</p>
+          <p>{{ product_detail.description }}</p>
+          <p>₱ {{ product_detail.price | intcomma}}</p>
+          <a href="{% url 'add_to_cart' product_detail.pk %}">Add to Cart</a>
         </div>
       {% endif %}
 
@@ -35,7 +35,7 @@
     {% for suggested in selected %}
     <div class="suggestion-wrapper">
       <div class="suggested-product">
-        <img src="{{ suggested.image.uel }}" alt="{{ suggested.name }}">
+        <img src="{{ suggested.image.url }}" alt="{{ suggested.name }}">
         <p> ₱ {{ suggested.price | intcomma }} </p>
       </div>
     </div>

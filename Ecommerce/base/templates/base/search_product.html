@@ -1,0 +1,35 @@
+{% extends "master.html" %}
+{% load humanize %}
+
+{% block content %}
+
+  {% include 'search.html' %}
+
+  <div class="home-wrapper">
+
+    <div class="products">
+        {% if searched %}
+            <ul>
+                {% for product in products %}
+                <li>
+                    <div>
+                        <h3>{{ product.name }}</h3>
+                        <p>₱ {{ product.price | intcomma }}</p>
+                        <a href="{% url 'product_detail' product.pk %}"><img src="{{ product.image.url }}" alt="{{ product.name }}"></a>
+                        <a href="{% url 'add_to_cart' product.pk %}">Add to Cart</a>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <h1> No Product Found.... </h1>
+        {% endif %}
+        <div class="trending">
+          
+        </div>
+    </div>
+
+  </div>
+
+
+{% endblock %}

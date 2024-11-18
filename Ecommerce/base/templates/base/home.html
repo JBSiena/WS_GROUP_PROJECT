@@ -7,27 +7,22 @@
 
   <div class="home-wrapper">
 
-    <div class="categories">
-      <h3>Categories</h3>
-      <ul>
-        {% for category in categories %}
-          <li>{{ category.name }}</li>
-        {% endfor %}
-      </ul>
-    </div>
-
     <div class="products">
-      <h3>Products</h3>
       <ul>  
         {% for product in products %}
           <li>
-            <a href="{% url 'product_detail' product.pk %}">{{ product.name }}</a>
-            <p>₱ {{ product.price | intcomma }}</p>
-            <a href="{% url 'product_detail' product.pk %}"><img src="{{ product.image.url }}" alt="{{ product.name }}"></a>
-            <a href="{% url 'add_to_cart' product.pk %}">Add to Cart</a>
+              <div>
+                <h3>{{ product.name }}</h3>
+                <p>₱ {{ product.price | intcomma }}</p>
+                <a href="{% url 'product_detail' product.pk %}"><img src="{{ product.image.url }}" alt="{{ product.name }}"></a>
+                <a href="{% url 'add_to_cart' product.pk %}">Add to Cart</a>
+              </div>
           </li>
-          {% endfor %}
+        {% endfor %}
         </ul>
+        <div class="trending">
+          
+        </div>
     </div>
 
   </div>

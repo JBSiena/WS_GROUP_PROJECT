@@ -6,19 +6,20 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    min-width: 100vw;
-    min-height: 100vh;
-    
+    width: 1920px;
+    height: 1080px;
+    scroll-behavior: smooth;
+}
+
+a {
+    text-decoration: none;
 }
 
 /* HOME STYLE */
 
 .home-wrapper{
     height: 100vh;
-    position: relative;
-    left: 350px;
-    width: 1080px;
-    top: 200px;
+    margin-left: 350px;
 }
 
 
@@ -40,23 +41,27 @@ body {
 
 }
 
-.products {
+.products ul{
+    display: flex;
+    flex-wrap: wrap;
+}
 
-    position: absolute;
-    width: 802px;
-    height: 451px;
-    left: 400px;
-    top: 70px;
-
+.products li{
+    margin: 50px;
+    list-style: none;
 }
 
 
 .products img{
+    width: 300px;
+    height: 300px;
+    border-radius: 10px;
 
-    position: absolute;
-    width: 308px;
-    height: 385px;
-    border-radius: 30px;
+}
+
+.products a{
+
+    color: #b30000;
 
 }
 
@@ -100,16 +105,15 @@ body {
 }
 
 
-
-
 /* END HOME STYLE */
 
 /* NAVIGATION STYLES */
 .navigation-bar{
-
-    position: absolute;
-    width: 329px;
-    height: 1080px;
+    position: fixed;
+    z-index: 1;
+    overflow-x: hidden;
+    width: 250px;
+    height: 100%;
     left: 0px;
     top: 0px;
     background: #F0F0F0;   
@@ -117,17 +121,17 @@ body {
 
 .logo-wrapper{
 
-    position: absolute;
-    width: 265px;
-    height: 90px;
-    left: 30px;
-    top: 29px;
+    width: 250px;
+    height: 100px;
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
 }
 
 .logo-wrapper img{
 
-    position: absolute;
     width: 99px;
     height: 90px;
 
@@ -135,7 +139,6 @@ body {
 
 .logo-wrapper h1{
 
-    position: absolute;
     left: 110px;
     font-family: 'Inria Serif',sans-serif;
     font-weight: 500;
@@ -146,28 +149,24 @@ body {
 
 .line{
 
-    position: absolute;
-    width: 294px;
-    height: 0px;
-    left: 15px;
-    top: 150px;
-    border: 1px solid #858585;
+    width: 220px;
+    border: 1px solid #000000;
+    margin: 0px 15px;
 
 }
 
 .profile-wrapper{
 
-    position: absolute;
-    width: 280px;
-    height: 85px;
-    left: 34px;
-    top: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-top: 30px;
 
 }
 
 .profile-wrapper img{
 
-    position: absolute;
     width: 80px;
     height: 80px;
     border-radius: 50%;
@@ -175,29 +174,26 @@ body {
 
 }
 
-.profile-wrapper span{
+.profile-wrapper p{
 
-    position: absolute;
     text-transform: capitalize;
     font-weight: 300;
-    font-size: 1.3rem;
-    color: #000000;
-    left: 100px;
-    top: 35px;
+    font-size: 1rem;
+    text-overflow: ellipsis; 
+    overflow: hidden; 
+    white-space: nowrap;
 
 }
 
 .navigation-content{
 
-    position: absolute;
     width: 250px;
     height: 300px;
-    left: 40px;
-    top: 342px;
-
     display: flex;
     justify-content: space-evenly;
     flex-direction: column;
+    margin: 20px;
+
 }
 
 .navigation-content a{
@@ -223,11 +219,12 @@ body {
 
 .search-wrapper{
     
-    position: absolute;
+    position: sticky;
     width: 1591px;
     height: 162px;
     left: 329px;
     top: 0px;
+    background: #Ffff;
 
 }
 
@@ -263,7 +260,6 @@ body {
 #search-button {
 
     box-sizing: border-box;
-    background: none;
     position: absolute;
     width: 48px;
     height: 44px;
@@ -303,3 +299,4 @@ body {
 
 
 /* END SEARCH STYLE */
+
