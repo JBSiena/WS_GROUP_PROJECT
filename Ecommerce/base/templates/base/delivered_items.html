@@ -18,6 +18,7 @@
                     {% for item in order.items.all %}
                         <li>
                             {{ item.product.name }} - {{ item.quantity }} x ₱ {{ item.product.price | intcomma }} = ₱ {{ item.total_price | intcomma }}
+                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
                         </li>
                     {% endfor %}
                 </ul>

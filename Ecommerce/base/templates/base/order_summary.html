@@ -4,9 +4,14 @@
 {% block content %}
 
     <div class="home-wrapper">
+        {% for msg in messages %}
+            <h1 style="color: forestgreen;">{{ msg }}</h1>
+        {% endfor %}
         <h2>Order Confirmation</h2>
         <p>Thank you for your order! Your order ID is #{{ order.id }}.</p>
-        <p>Status: {{ order.status }}</p>
+        <p><strong>Status:</strong> {{ order.status }}</p>
+        <p><strong>Payment Method:</strong> {{ order.payment.payment_method }}</p>
+        <p><strong>Payment Status:</strong> {{ order.payment.payment_status }}</p>
         <p>Total Price: ₱ {{ order.total_price | intcomma }}</p>
 
         <h3>Order Details:</h3>
@@ -26,6 +31,7 @@
                         <td>{{ item.quantity }}</td>
                         <td>₱ {{ item.product.price | intcomma }}</td>
                         <td>₱ {{ item.total_price | intcomma }}</td>
+                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
                     </tr>
                 {% endfor %}
             </tbody>

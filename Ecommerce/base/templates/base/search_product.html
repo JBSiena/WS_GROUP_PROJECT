@@ -8,7 +8,10 @@
   <div class="home-wrapper">
 
     <div class="products">
-        {% if searched %}
+        {% if searched != '' %}
+            <h1>You searched for {{ searched }}</h1>
+        {% endif %}
+        {% if searched is not None and products%}
             <ul>
                 {% for product in products %}
                 <li>
@@ -22,7 +25,9 @@
                 {% endfor %}
             </ul>
         {% else %}
-            <h1> No Product Found.... </h1>
+            <div>
+                <h1> No Product Found.... </h1> 
+            </div>
         {% endif %}
         <div class="trending">
           

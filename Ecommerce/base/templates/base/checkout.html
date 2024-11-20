@@ -5,7 +5,6 @@
 
     <div class="home-wrapper">
         <h2>Checkout</h2>
-
         {% if cart_items %}
             <table>
                 <thead>
@@ -27,15 +26,36 @@
                     {% endfor %}
                 </tbody>
             </table>
-
+            
             <h3>Total Price: ₱ {{ total_price | intcomma }}</h3>
 
-            <form method="POST" action="{% url 'place_order'%}">
+            <form method="POST">
                 {% csrf_token %}
-                <!-- Here you can add payment details, address fields, etc. -->
+                {{ address_form.as_p }}
+            
+                <h4>Payment Method:</h4>
+                <label>
+                    <input type="radio" name="payment_method" value="COD" required>
+                    Cash on Delivery
+                </label><br>
+                <label>
+                    <input type="radio" name="payment_method" value="PAYPAL" required>
+                    PayPal
+                </label><br>
+                <label>
+                    <input type="radio" name="payment_method" value="GCASH" required>
+                    GCash
+                </label><br>
+                <label>
+                    <input type="radio" name="payment_method" value="PAYMAYA" required>
+                    PayMaya
+                </label><br><br>
+            
                 <button type="submit">Place Order</button>
-                <a href="{% url 'home' %}">Continue Shopping</a>
+                <button type="button" onclick="location.href='{% url 'home' %}'" >Continue Shopping</button>
             </form>
+            
+
         {% else %}
             <p>Your cart is empty. Please add some items before proceeding to checkout.</p>
             <a href="{% url 'home' %}">Continue Shopping</a>

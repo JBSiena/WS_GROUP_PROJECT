@@ -1,37 +1,51 @@
 from django import forms
 from .models import *
-from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
-class ProductForm(forms.ModelForm):
-    class Meta:
-        model = Product
-        fields = ['name', 'description', 'price', 'stock', 'image', 'category']
 
-    description = forms.CharField(widget=forms.Textarea(attrs={'rows': 10, 'cols': 40}), required=True)
-    image = forms.ImageField(required=False) 
-
-class RegisterForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput(), required=True)
-    password_confirm = forms.CharField(widget=forms.PasswordInput(), required=True)
-
-    class Meta:
-        model = User
-        fields = ['username', 'email']
+class CustomUserCreationForm(UserCreationForm):
+    first_name = forms.CharField(label='',widget=forms.TextInput(attrs={
+        'placeholder':'First Name',
+    }))
+    last_name = forms.CharField(label='',widget=forms.TextInput(attrs={
+        'placeholder':'Last Name',
+    }))
+    email = forms.EmailField(label='',widget=forms.EmailInput(attrs={
+        'placeholder':'Email',
+    }))
+    phone = forms.CharField(label='',widget=forms.TextInput(attrs={
+        'placeholder':'Phone Number',
+    }))
+    password1 = forms.CharField(label='',widget=forms.PasswordInput(attrs={
+        'placeholder':'Enter Password',
+    }))
+    password2 = forms.CharField(label='',widget=forms.PasswordInput(attrs={
+        'placeholder':'Confirm Password',
+    }))
     
-    def clean_password_confirm(self):
-        password = self.cleaned_data.get('password')
-        password_confirm = self.cleaned_data.get('password_confirm')
-        if password != password_confirm:
-            raise forms.ValidationError("Passwords do not match.")
-        return password_confirm
+    class Meta:
+        model = Customer
+        fields = ['first_name', 'last_name', 'email', 'phone', 'password1', 'password2']
+        
+class UserAuthenticationForm(AuthenticationForm):
+    username = forms.EmailField(widget=forms.EmailInput(attrs={
+        'placeholder':'Email',
+    }))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={
+        'placeholder':'Enter Password',
+    }))
     
 class EditProfileForm(forms.ModelForm):
     class Meta:
-        model = Profile
-        fields = ['first_name', 'last_name', 'middle_name', 'phone_number', 'image']
+        model = Customer
+        fields = ['first_name', 'last_name', 'phone', 'image']
 
 
 class AddressForm(forms.ModelForm):
+
     class Meta:
         model = Address
         fields = ['street', 'city', 'purok', 'landmark']
+        widgets = {
+            'landmark': forms.Textarea(attrs={'rows': 2}),
+        }

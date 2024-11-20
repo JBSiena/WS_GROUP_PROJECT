@@ -10,7 +10,7 @@ from .forms import *
 # Home Page - Show products
 def home(request):
     categories = Category.objects.all()
-    active_products = Product.objects.filter(is_active=True)
+    active_products = Product.objects.filter(is_activer=True)
     selected_products = random.sample(list(active_products), min(len(active_products), 10))
 
     return render(request, 'base/home.html', {
@@ -41,41 +41,110 @@ def product_detail(request, pk):
 @login_required
 def add_to_cart(request, pk):
     product = get_object_or_404(Product, pk=pk)
+    quantity = int(request.GET.get('quantity', 1))
     cart, created = ShoppingCart.objects.get_or_create(user=request.user)
+
     # Check if the product already exists in the cart
     cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
     
-    if not created:  # If it already exists, increase the quantity
-        cart_item.quantity += 1
+    if created:  
+        cart_item.quantity = quantity # If the item is newly created, set the quantity directly
+    else:
+        cart_item.quantity += quantity  # If it already exists, update the quantity
+
     cart_item.save()
+    messages.success(request, "Your order has been added successfully to your Cart!")
     return redirect('view_cart')
 
 # Checkout View
 @login_required
 def checkout(request):
-    # Get the user's shopping cart
     try:
         cart = ShoppingCart.objects.get(user=request.user)
     except ShoppingCart.DoesNotExist:
-        # If no cart exists for the user redirect to view_cart
         return redirect('view_cart')
-    
-    # Get all cart items for user's cart example get the cart items for "jbsiena" or user logged in
+
     cart_items = cart.items.all()
-
-    # Calculate the total price of the items in the cart
     total_price = sum(item.total_price() for item in cart_items)
+    user_address = Address.objects.filter(user=request.user).first()
 
+    if request.method == 'POST':
+        address_form = AddressForm(request.POST)
+        payment_method = request.POST['payment_method']  # Get payment method from form
 
-    # Pass the cart items and total price to the template
+        if address_form.is_valid() and payment_method:
+            address = address_form.save(commit=False)
+            if user_address:
+                address.id = user_address.id
+            address.user = request.user
+            address.save()
+
+            shipping_address = f"{address.street}, {address.purok}, {address.city}, (Landmark: {address.landmark})"
+
+            # Create the order
+            order = Order.objects.create(
+                user=request.user,
+                status=Order.PENDING,
+                total_price=total_price,
+                shipping_address=shipping_address,
+            )
+
+            # Add items to the order
+            for item in cart_items:
+                OrderItem.objects.create(
+                    order=order,
+                    product=item.product,
+                    quantity=item.quantity,
+                    price=item.product.price,
+                )
+
+            # Handle payment
+            if payment_method == 'COD':
+                Payment.objects.create(
+                    order=order,
+                    payment_method=Payment.CASH_ON_DELIVERY,
+                    payment_status=Payment.PENDING,
+                )
+            elif payment_method == 'GCASH':
+                Payment.objects.create(
+                    order=order,
+                    payment_method=Payment.GCASH,
+                    payment_status=Payment.COMPLETED,
+                )
+            elif payment_method == 'PAYPAL':
+                Payment.objects.create(
+                    order=order,
+                    payment_method=Payment.PAYPAL,
+                    payment_status=Payment.COMPLETED,
+                )
+            elif payment_method == 'PAYMAYA':
+                Payment.objects.create(
+                    order=order,
+                    payment_method=Payment.PAYMAYA,
+                    payment_status=Payment.COMPLETED,
+                )
+
+            # Set a random delivery date
+            order.set_random_delivery_date()
+            # Clear the cart
+            cart.items.all().delete()  
+            return redirect('order_summary', order_id=order.id)
+
+    else:
+        address_form = AddressForm(instance=user_address)
+
     return render(request, 'base/checkout.html', {
         'cart_items': cart_items,
         'total_price': total_price,
+        'address_form': address_form,
+        'payment_methods': ['COD', 'PAYPAL', 'PAYMAYA', 'GCASH'],  # Pass payment options to the template
     })
+
 
 # Order Summary View
 @login_required
 def order_summary(request, order_id):
+    messages.success(request, "Your order has been placed successfully!")
     order = get_object_or_404(Order, pk=order_id)
     return render(request, 'base/order_summary.html', {'order': order})
 
@@ -98,29 +167,25 @@ def view_cart(request):
 def remove_from_cart(request, cart_item_id):
     cart_item = get_object_or_404(CartItem, id=cart_item_id)
     cart_item.delete()  # Remove the cart item
+    remove = messages.error(request, "Your order has been remove successfully to your Cart!")
     return redirect('view_cart')
 
 @login_required
 def order_status(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
-    shipped_orders = Shipping.objects.all()
 
-    for shipping in shipped_orders:
-        shipping.update_shipping_status()
-        messages.success(request, f"Order Status Updated {order.status}.")
-
-    # Get associated shipping and order items
-    shipping = order.shipping
-    order_items = order.items.all()
-
-    if order.status == Order.DELIVERED and order.created_at == Shipping.shipping_date:
-        shipping = Order.DELIVERED
+    # Update the shipping status based on the delivery date
+    if hasattr(order, 'shipping'):
+        order.shipping.update_shipping_status()
 
     return render(request, 'base/order_status.html', {
         'order': order,
-        'shipping': shipping,
-        'order_items': order_items,
+        'shipping': order.shipping,
+        'order_items': order.items.all(),
+        'shipping_address': order.shipping_address,
     })
+
+
 
 @login_required
 def create_shipping(request, order_id):
@@ -141,146 +206,89 @@ def create_shipping(request, order_id):
 
     return redirect('view_order', order_id=order.id)
 
-@login_required
-def place_order(request):
-    try:
-        # Get the user's shopping cart
-        cart = ShoppingCart.objects.get(user=request.user)
-    except ShoppingCart.DoesNotExist:
-        messages.error(request, "No cart found.")
-        return redirect('view_cart')
 
-    cart_items = cart.items.all()
-
-    # Create the order
-    order = Order.objects.create(
-        user=request.user,
-        status=Order.PENDING,  # Set initial order status to 'PENDING'
-        total_price=sum(item.total_price() for item in cart_items),
-        shipping_address="Temporary address",  # You can ask the user to enter the address
-    )
-
-    # Add items to the order
-    for item in cart_items:
-        OrderItem.objects.create(
-            order=order,
-            product=item.product,
-            quantity=item.quantity,
-            price=item.product.price,
-        )
-
-    # Create a payment (just a placeholder for now)
-    Payment.objects.create(
-        order=order,
-        payment_method="Credit Card",  # Placeholder for payment method
-        payment_status="Pending",
-    )
-
-    # Create a shipping record with a random delivery date and update order status
-    order.set_random_delivery_date()
-    
-    # Remove The Place Ordered Item and Add to Order List
-    cart.items.all().delete()
-
-    messages.success(request, "Your order has been placed successfully!")
-    return redirect('order_summary', order_id=order.id)
-
-@login_required
-def view_order_products(request, order_id):
-    # Get the order object by order_id (ensure it's the logged-in user’s order)
-    order = get_object_or_404(Order, id=order_id, user=request.user)
-
-    # Get all the items in the order
-    order_items = order.items.all()
-
-    # Pass the order, order items, and shipping details to the template
-    return render(request, 'base/order_products.html', {
-        'order': order,
-        'order_items': order_items
-    })
-
+# View the Ordered List / Shipping Products
 @login_required
 def order_list(request):
     # Get all orders for the logged-in user
-    orders = Order.objects.filter(user=request.user).order_by('-created_at')
-    
+    orders = Order.objects.filter(user=request.user).exclude(status=Order.DELIVERED).order_by('-created_at')
+    product = Product.objects.filter(name__in=orders)
     # Pass the orders to the template
     return render(request, 'base/order_list.html', {
-        'orders': orders
+        'orders': orders,
+        'product':product,
     })
 
-@login_required
+
+# Check if already Delivered to mark as Delivered and move to Delivered Items
 def mark_order_as_delivered(request, order_id):
     # Get the order object
     order = get_object_or_404(Order, id=order_id, user=request.user)
+    # Mark as delivered and move items to DeliveredItem
+    if order.status != Order.DELIVERED:
+        order.status = Order.DELIVERED
+        order.save()
+        # Move items to delivered items
+        order.move_to_delivered_items()
 
-    # Update the order status to delivered
-    order.status = Order.DELIVERED
-    order.save()
+        messages.success(request, f"Order #{order.id} marked as delivered.")
+    else:
+        messages.info(request, f"Order #{order.id} is already delivered.")
 
+    return redirect('delivered_items')
+
+# Delivered Items
 @login_required
 def delivered_items(request):
-    # Get all orders for the logged-in user that are marked as 'Delivered'
-    delivered_orders = Order.objects.filter(user=request.user, status=Order.DELIVERED)
-
-    # If the user has no delivered orders
-    if not delivered_orders:
-        return render(request, 'base/delivered_items.html', {
-            'message': 'You have no delivered orders yet.',
-        })
-
-    # Otherwise, pass the orders to the template
+    delivered_orders = Order.objects.filter(status=Order.DELIVERED, user=request.user)
     return render(request, 'base/delivered_items.html', {
         'delivered_orders': delivered_orders,
     })
 
-# Edit User Profile
+
+# Edit User Customer
 @login_required
-def edit_profile(request,pk):
+def edit_customer(request,pk):
     if request.method == 'POST':
-        user = Profile.objects.get(user=request.user, id=pk)
+        user = Customer.objects.get(id=pk)
         form = EditProfileForm(request.POST, request.FILES, instance=user)
-        
         if form.is_valid():
             form.save() # Save the New User Image
             return redirect('home')
-
     else:
-        user = Profile.objects.get(user=request.user, id=pk)
+        user = Customer.objects.get(id=pk)
         form = EditProfileForm(instance=user)
-
     return render(request, 'base/edit_profile.html', {'form': form})
 
 @login_required
 def address(request,pk):
+    user_address = Address.objects.filter(user=request.user).first()
     if request.method == 'POST':
-        user = Profile.objects.get(id=pk)
-        form = AddressForm(request.POST, instance=user)
-        
-        if form.is_valid():
-            form.save() # Save the New User Image
+        address_form = AddressForm(request.POST)
+        if address_form.is_valid():
+            # If the user already has an address, update it
+            address = address_form.save(commit=False)
+            if user_address:
+                address.id = user_address.id  # Update the existing address
+            address.user = request.user  # Ensure the user field is populated
+            address.save()
             return redirect('home')
-
     else:
-        user = Profile.objects.get(user=request.user, id=pk)
-        form = AddressForm(instance=user)
+        address_form = AddressForm(instance=user_address)
 
-    return render(request, 'base/address.html', {'form': form})
+    return render(request, 'base/address.html', {'form': address_form})
 
 
 # Register view
 def register(request):
     if request.method == 'POST':
-        form = RegisterForm(request.POST)
+        form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
-            user.set_password(form.cleaned_data['password'])
-            user.save()
-            Profile.objects.create(user=user)
+            form.save()
             messages.success(request, "Your account has been created!")
             return redirect('login')  # Redirect to login page after registration
     else:
-        form = RegisterForm()
+        form = CustomUserCreationForm()
     
     return render(request, 'base/register.html', {'form': form, 'hide_navbar': True})
 

@@ -10,20 +10,24 @@
             <h3>Shipping Information:</h3>
             <p><strong>Shipping Status:</strong> {{ shipping.shipping_status }}</p>
             <p><strong>Tracking Number:</strong> {{ shipping.tracking_number }}</p>
-            <p><strong>Tracking Number:</strong> {{ shipping.shipping_method }}</p>
+            <p><strong>Shipping Method:</strong> {{ shipping.shipping_method }}</p>
+            <p><strong>Payment Method:</strong> {{ order.payment.payment_method }}</p>
+            <p><strong>Payment Status:</strong> {{ order.payment.payment_status }}</p>
             <p><strong>Delivery Date:</strong> {{ shipping.shipping_date }}</p>
+            <h3>Shipping Address:</h3>
+            <p>{{ shipping_address }}</p>
             {% if shipping.shipping_status == 'Delivered' %}
-                <p>Your order has been delivered!</p>
+                <p><strong>order has been delivered!</strong></p>
             {% elif shipping.shipping_status == 'Shipped' %}
-                <p>Your order is on the way! Track it with the tracking number.</p>
+                <p><strong> Your order is on the way! Track it with the tracking number.</strong> </p>
             {% elif shipping.shipping_status == 'Not Shipped' %}
-                <p>Your order has not been shipped yet. Please check back later.</p>
+                <p><strong> Your order has not been shipped yet. Please check back later.</strong> </p>
             {% endif %}
             
             <h3>Products in this Order:</h3>
             <ul>
                 {% for item in order_items %}
-                    <li>{{ item.product.name }} - {{ item.quantity }}x ₱ {{ item.product.price | intcomma }} <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}"> </li>
+                    <li>{{ item.product.name }} - {{ item.quantity }} x ₱ {{ item.total_price | intcomma }} <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}"> </li>
                 {% endfor %}
             </ul>
         {% else %}

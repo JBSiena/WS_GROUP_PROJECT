@@ -1,38 +1,70 @@
 from django.db import models
-from django.contrib.auth.models import User
-from django.utils import timezone
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.utils.timezone import now
 from datetime import timedelta
 import random, string
 
+# Creating Custom User / Permissions
+class CustomUserManagement(BaseUserManager):
+    def create_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError('You did not enter a valid email.')
+        
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
 
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=100, default='Guest')
-    middle_name = models.CharField(max_length=100, blank=True)
-    last_name = models.CharField(max_length=100, default='User')
-    phone_number = models.CharField(max_length=20)
+        return user
+    
+    # for creating in superuser; use the email and password for logging in
+    def create_superuser(self, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        return self.create_user(email, password, **extra_fields)
+
+
+# Customer Models
+class Customer(AbstractBaseUser, PermissionsMixin):
+    first_name = models.CharField(max_length=50, blank=True)
+    last_name = models.CharField(max_length=50, blank=True)
+    phone = models.CharField(max_length=12)
+    email = models.EmailField(unique=True)
     image = models.ImageField(upload_to='images/user/', blank=True, default='images/user/dp.png')
 
+    is_active = models.BooleanField(default=True) 
+    is_staff = models.BooleanField(default=False) # Not Allowed the customer to login into backend
+
+    objects = CustomUserManagement()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+
     def __str__(self):
-        return f'{ self.last_name }, { self.first_name } { self.middle_name }.'
+        return self.email
 
     
 class Address(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    street = models.CharField(max_length=100)
-    city = models.CharField(max_length=100)
-    purok = models.CharField(max_length=100)
+    user = models.OneToOneField(Customer, on_delete=models.CASCADE)
+    street = models.CharField(max_length=100, blank=False)
+    city = models.CharField(max_length=100, blank=False)
+    purok = models.CharField(max_length=100, blank=False)
     landmark = models.TextField(max_length=300, blank=True)
+
+    def __str__(self):
+        return f'{self.street}, {self.purok}, {self.city}, {self.landmark}'
 
     
 # Category Model
 class Category(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.TextField(null=True, blank=True)
-    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, related_name='subcategories')
+    name = models.CharField(max_length=255) # Name of the Category
     
     def __str__(self):
         return self.name
+    
+    class Meta:
+        verbose_name_plural = 'Categories' # Just to change 'Category' to 'Categories' in backend
 
 
 # Product Model
@@ -41,17 +73,17 @@ class Product(models.Model):
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     stock = models.PositiveIntegerField()
-    image = models.ImageField(upload_to='products/', null=True, blank=True)
-    category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    is_active = models.BooleanField(default=True)
+    image = models.ImageField(upload_to='images/products/', null=True, blank=True)
+    category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE, default=1)
+    on_trend = models.BooleanField(default=False)
+    is_activer = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
 
     def is_in_stock(self):
         return self.stock > 0
+    
 
 
 # Order Model
@@ -68,12 +100,11 @@ class Order(models.Model):
         (CANCELED, 'Canceled'),
     ]
 
-    user = models.ForeignKey(User, related_name='orders', on_delete=models.CASCADE)
+    user = models.ForeignKey(Customer, related_name='orders', on_delete=models.CASCADE)
     status = models.CharField(max_length=10, choices=ORDER_STATUS_CHOICES, default=PENDING)
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     shipping_address = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"Order #{self.id} - {self.status}"
@@ -88,7 +119,7 @@ class Order(models.Model):
             return  # Do nothing if the order is not in a 'PENDING' state.
 
         # Generate a random number of days between 3 and 7 days
-        random_days = random.randint(1, 2)
+        random_days = random.randint(3, 7)
         delivery_date = self.created_at + timedelta(days=random_days)
 
         # Generate a random code for tracking_number
@@ -109,6 +140,17 @@ class Order(models.Model):
         self.save()
 
         return shipping
+    
+    def move_to_delivered_items(self):
+        # Ensure the order is marked as delivered
+        if self.status == Order.DELIVERED:
+            for item in self.items.all():
+                DeliveredItem.objects.create(
+                    order=self,
+                    product=item.product,
+                    quantity=item.quantity,
+                    price=item.price,
+                )
 
 # OrderItem Model (links Order and Product)
 class OrderItem(models.Model):
@@ -126,7 +168,7 @@ class OrderItem(models.Model):
 
 # ShoppingCart Model (for saving user cart before checkout)
 class ShoppingCart(models.Model):
-    user = models.OneToOneField(User, related_name='cart', on_delete=models.CASCADE)
+    user = models.OneToOneField(Customer, related_name='cart', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -154,14 +196,37 @@ class CartItem(models.Model):
 
 # Payment Model
 class Payment(models.Model):
+    CASH_ON_DELIVERY = 'COD'
+    PAYPAL = 'PAYPAL'
+    GCASH = 'GCASH'
+    PAYMAYA = 'PAYMAYA'
+
+    PAYMENT_METHOD_CHOICES = [
+        (CASH_ON_DELIVERY, 'Cash on Delivery'),
+        (PAYPAL, 'PayPal'),
+        (GCASH, 'GCash'),
+        (PAYMAYA, 'PayMaya'),
+    ]
+
+    PENDING = 'PENDING'
+    COMPLETED = 'COMPLETED'
+    FAILED = 'FAILED'
+
+    PAYMENT_STATUS_CHOICES = [
+        (PENDING, 'Pending'),
+        (COMPLETED, 'Completed'),
+        (FAILED, 'Failed'),
+    ]
+
     order = models.OneToOneField(Order, related_name='payment', on_delete=models.CASCADE)
-    payment_method = models.CharField(max_length=50)
-    payment_status = models.CharField(max_length=50)
+    payment_method = models.CharField(max_length=20, choices=PAYMENT_METHOD_CHOICES, default=CASH_ON_DELIVERY)
+    payment_status = models.CharField(max_length=20, choices=PAYMENT_STATUS_CHOICES, default=PENDING)
     payment_date = models.DateTimeField(auto_now_add=True)
     transaction_id = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return f"Payment for Order #{self.order.id} - {self.payment_status}"
+
 
 
 # Shipping Model
@@ -174,15 +239,31 @@ class Shipping(models.Model):
 
     def __str__(self):
         return f"Shipping for Order #{self.order.id} - {self.shipping_status}"
-    
+
     def update_shipping_status(self):
-        # Update shipping status based on the delivery date.
-        if self.shipping_date and timezone.now() == self.shipping_date:
-            self.shipping_status = 'Delivered'
+        # Get today's date and the shipping date
+        today = now().date()
+        shipping_date = self.shipping_date.date() if self.shipping_date else None
+
+        if shipping_date:
+            if shipping_date <= today:
+                self.shipping_status = 'Delivered'
+                self.order.status = Order.DELIVERED
+            elif shipping_date > today:
+                self.shipping_status = 'Shipped'
+                self.order.status = Order.SHIPPED
+            else:
+                self.shipping_status = 'Not Shipped'
+                self.order.status = Order.PENDING
+
+            self.order.save()
             self.save()
-    
-    def get_products(self):
-            # Return a list of products associated with this shipping's order
-            return self.order.items.all()
-    
-    
+
+class DeliveredItem(models.Model):
+    order = models.ForeignKey(Order, related_name='delivered_items', on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.quantity} x {self.product.name} (Delivered)"
