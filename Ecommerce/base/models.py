@@ -58,13 +58,13 @@ class Address(models.Model):
     
 # Category Model
 class Category(models.Model):
-    name = models.CharField(max_length=255) # Name of the Category
+    name = models.CharField(max_length=100) # Name of the Category
     
     def __str__(self):
         return self.name
     
     class Meta:
-        verbose_name_plural = 'Categories' # Just to change 'Category' to 'Categories' in backend
+        verbose_name_plural = 'Categories' # Just to change 'Categorys' to 'Categories' in backend
 
 
 # Product Model
@@ -76,7 +76,7 @@ class Product(models.Model):
     image = models.ImageField(upload_to='images/products/', null=True, blank=True)
     category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE, default=1)
     on_trend = models.BooleanField(default=False)
-    is_activer = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
@@ -196,10 +196,10 @@ class CartItem(models.Model):
 
 # Payment Model
 class Payment(models.Model):
-    CASH_ON_DELIVERY = 'COD'
-    PAYPAL = 'PAYPAL'
-    GCASH = 'GCASH'
-    PAYMAYA = 'PAYMAYA'
+    CASH_ON_DELIVERY = 'Cash on Delivery'
+    PAYPAL = 'PayPal'
+    GCASH = 'GCash'
+    PAYMAYA = 'PayMaya'
 
     PAYMENT_METHOD_CHOICES = [
         (CASH_ON_DELIVERY, 'Cash on Delivery'),

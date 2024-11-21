@@ -3,6 +3,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from .models import *
+from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from .forms import *
@@ -10,7 +11,7 @@ from .forms import *
 # Home Page - Show products
 def home(request):
     categories = Category.objects.all()
-    active_products = Product.objects.filter(is_activer=True)
+    active_products = Product.objects.filter(is_active=True)
     selected_products = random.sample(list(active_products), min(len(active_products), 10))
 
     return render(request, 'base/home.html', {
@@ -21,11 +22,23 @@ def home(request):
 def search_product(request):
     if request.method == 'POST':
         searched = request.POST['searched']
-        products = Product.objects.filter(name__contains=searched)
+        
+        # Search for SubCategories
+        subcategories = Category.objects.filter(name__icontains=searched)
+        
+        # Fetch Products associated with the matched SubCategories
+        products = Product.objects.filter(
+            Q(name__icontains=searched) | 
+            Q(category__in=subcategories)
+        )
+        
         return render(request, 'base/search_product.html', {
-            'searched':searched,
+            'searched': searched,
             'products': products,
-            })
+            'subcategories': subcategories,
+        })
+
+    return render(request, 'base/search_product.html', {})
 
 # Product Detail
 def product_detail(request, pk):
@@ -67,17 +80,24 @@ def checkout(request):
     cart_items = cart.items.all()
     total_price = sum(item.total_price() for item in cart_items)
     user_address = Address.objects.filter(user=request.user).first()
+    username = Customer.objects.get(id=request.user.id)
 
     if request.method == 'POST':
         address_form = AddressForm(request.POST)
+        form = EditProfileForm(request.POST, request.FILES, instance=username)
         payment_method = request.POST['payment_method']  # Get payment method from form
 
-        if address_form.is_valid() and payment_method:
+        if address_form.is_valid() and payment_method and form.is_valid():
             address = address_form.save(commit=False)
+            usern = form.save(commit=False)
             if user_address:
                 address.id = user_address.id
+                usern.id = username.id
             address.user = request.user
+            usern.user = request.user
             address.save()
+            usern.save()
+
 
             shipping_address = f"{address.street}, {address.purok}, {address.city}, (Landmark: {address.landmark})"
 
@@ -127,16 +147,19 @@ def checkout(request):
             # Set a random delivery date
             order.set_random_delivery_date()
             # Clear the cart
-            cart.items.all().delete()  
+            cart.items.all().delete()
             return redirect('order_summary', order_id=order.id)
 
     else:
         address_form = AddressForm(instance=user_address)
+        username = Customer.objects.get(id=request.user.id)
+        form = EditProfileForm(instance=username)
 
     return render(request, 'base/checkout.html', {
         'cart_items': cart_items,
         'total_price': total_price,
         'address_form': address_form,
+        'form': form,
         'payment_methods': ['COD', 'PAYPAL', 'PAYMAYA', 'GCASH'],  # Pass payment options to the template
     })
 
@@ -253,7 +276,7 @@ def edit_customer(request,pk):
         user = Customer.objects.get(id=pk)
         form = EditProfileForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
-            form.save() # Save the New User Image
+            form.save() # Save the New User Information
             return redirect('home')
     else:
         user = Customer.objects.get(id=pk)

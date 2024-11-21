@@ -29,10 +29,12 @@
             
             <h3>Total Price: ₱ {{ total_price | intcomma }}</h3>
 
-            <form method="POST">
+            <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
-                {{ address_form.as_p }}
-            
+
+                {{ address_form }}<br>
+                {{ form }}<br>
+
                 <h4>Payment Method:</h4>
                 <label>
                     <input type="radio" name="payment_method" value="COD" required>
@@ -53,13 +55,14 @@
             
                 <button type="submit">Place Order</button>
                 <button type="button" onclick="location.href='{% url 'home' %}'" >Continue Shopping</button>
-            </form>
-            
 
+            </form>
+             
         {% else %}
             <p>Your cart is empty. Please add some items before proceeding to checkout.</p>
             <a href="{% url 'home' %}">Continue Shopping</a>
         {% endif %}
+
     </div>
     
 {% endblock %}

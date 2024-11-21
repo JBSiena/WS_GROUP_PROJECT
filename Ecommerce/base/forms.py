@@ -36,16 +36,35 @@ class UserAuthenticationForm(AuthenticationForm):
     }))
     
 class EditProfileForm(forms.ModelForm):
+    first_name = forms.CharField(label='First Name',widget=forms.TextInput(attrs={
+        'placeholder':'First Name',
+    }))
+    last_name = forms.CharField(widget=forms.TextInput(attrs={
+        'placeholder':'Last Name',
+    }))
+    phone = forms.CharField(widget=forms.TextInput(attrs={
+        'placeholder':'Phone Number',
+    }))
+
     class Meta:
         model = Customer
         fields = ['first_name', 'last_name', 'phone', 'image']
 
 
 class AddressForm(forms.ModelForm):
+    street = forms.CharField(widget=forms.TextInput(attrs={
+        'placeholder':'Street',
+    }))
+    city = forms.CharField(widget=forms.TextInput(attrs={
+        'placeholder':'Last Name',
+    }))
+    purok = forms.CharField(widget=forms.TextInput(attrs={
+        'placeholder':'Phone Number',
+    }))
+    landmark = forms.CharField(widget=forms.Textarea(attrs={
+        'placeholder':'Landmark',
+    }))
 
     class Meta:
         model = Address
         fields = ['street', 'city', 'purok', 'landmark']
-        widgets = {
-            'landmark': forms.Textarea(attrs={'rows': 2}),
-        }

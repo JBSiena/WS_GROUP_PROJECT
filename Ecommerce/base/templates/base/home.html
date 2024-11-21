@@ -1,17 +1,21 @@
 {% extends "master.html" %}
 {% load humanize %}
 
-{% block content %}
 
-  {% include 'search.html' %}
+{% block content %}
+{% include 'search.html' %}
 
   <div class="home-wrapper">
 
+    
+
     <div class="products">
+      
       <ul>  
         {% for product in products %}
-          <li>
-              <div>
+        <li>
+          <div>
+                <a href="{% url 'search_product'  %}">{{ product.category }}</a>
                 <h3>{{ product.name }}</h3>
                 <p>₱ {{ product.price | intcomma }}</p>
                 <a href="{% url 'product_detail' product.pk %}"><img src="{{ product.image.url }}" alt="{{ product.name }}"></a>
