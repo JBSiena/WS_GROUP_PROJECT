@@ -1,50 +1,51 @@
-{% extends 'master.html' %}
-{% load humanize %}
-
+{% extends 'master.html' %} 
+{% load humanize %} 
 {% block content %}
 
-    <div class="home-wrapper">
-        {% for msg in messages %}
-            <h1 style="color: forestgreen;">{{ msg }}</h1>
-        {% endfor %}
-        <h2>Order Confirmation</h2>
-        <p>Thank you for your order! Your order ID is #{{ order.id }}.</p>
-        <p><strong>Status:</strong> {{ order.status }}</p>
-        <p><strong>Payment Method:</strong> {{ order.payment.payment_method }}</p>
-        <p><strong>Payment Status:</strong> {{ order.payment.payment_status }}</p>
-        <p>Total Price: ₱ {{ order.total_price | intcomma }}</p>
+<div class="home-wrapper">
+  {% for msg in messages %}
+  <h1 style="color: forestgreen">{{ msg }}</h1>
+  {% endfor %}
+  <h2>Order Confirmation</h2>
+  <p>Thank you for your order! Your order ID is #{{ order.id }}.</p>
+  <p><strong>Status:</strong> {{ order.status }}</p>
+  <p><strong>Payment Method:</strong> {{ order.payment.payment_method }}</p>
+  <p><strong>Payment Status:</strong> {{ order.payment.payment_status }}</p>
+  <p>Total Price: ₱ {{ order.total_price | intcomma }}</p>
 
-        <h3>Order Details:</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in order.items.all %}
-                    <tr>
-                        <td>{{ item.product.name }}</td>
-                        <td>{{ item.quantity }}</td>
-                        <td>₱ {{ item.product.price | intcomma }}</td>
-                        <td>₱ {{ item.total_price | intcomma }}</td>
-                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+  <h3>Order Details:</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Price</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in order.items.all %}
+      <tr>
+        <td>{{ item.product.name }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>₱ {{ item.product.price | intcomma }}</td>
+        <td>₱ {{ item.total_price | intcomma }}</td>
+        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" />
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 
-        {% if order.status == 'PENDING' %}
-        <form method="POST">
-            {% csrf_token %}
-            <button type="submit" name="cancel_order" class="btn btn-danger">Cancel Order</button>
-        </form>
-        {% endif %}
-    
-        <a href="{% url 'order_list' %}">View My Orders</a>
-    </div>
+  {% if order.status == 'PENDING' %}
+  <form method="POST">
+    {% csrf_token %}
+    <button type="submit" name="cancel_order" class="btn btn-danger">
+      Cancel Order
+    </button>
+  </form>
+  {% endif %}
+
+  <a href="{% url 'order_list' %}">View My Orders</a>
+</div>
 
 {% endblock %}

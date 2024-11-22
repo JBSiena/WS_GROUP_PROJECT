@@ -1,41 +1,39 @@
-{% extends 'master.html' %}
-{% load humanize %}
-
+{% extends 'master.html' %} 
+{% load humanize %} 
 {% block content %}
 
-    <div class="home-wrapper">
-        <h2>Your Orders</h2>
+<div class="home-wrapper">
+  <h2>Your Orders</h2>
 
-        {% if orders %}
-            <table>
-                <thead>
-                    <tr>
-                        <th>Order ID</th>
-                        <th>Status</th>
-                        <th>Total Price</th>
-                        <th>Order Date</th>
-                        <th>Details</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for order in orders %}
-                        <tr>
-                            <td>#{{ order.id }}</td>
-                            <td>{{ order.status }}</td>
-                            <td>₱ {{ order.total_price | intcomma }}</td>
-                            <td>{{ order.created_at|date:"Y-m-d H:i" }}</td>
-                            <td>
-                                <a href="{% url 'order_status' order.id %}">View Details</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <p>You have no orders yet.</p>
-        {% endif %}
-        <a href="{% url 'home' %}"> Continue Shopping </a>
-        
-    </div>
+  {% if orders %}
+  <table>
+    <thead>
+      <tr>
+        <th>Order ID</th>
+        <th>Status</th>
+        <th>Total Price</th>
+        <th>Order Date</th>
+        <th>Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for order in orders %}
+      <tr>
+        <td>#{{ order.id }}</td>
+        <td>{{ order.status }}</td>
+        <td>₱ {{ order.total_price | intcomma }}</td>
+        <td>{{ order.created_at|date:"Y-m-d H:i" }}</td>
+        <td>
+          <a href="{% url 'order_status' order.id %}">View Details</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>You have no orders yet.</p>
+  {% endif %}
+  <a href="{% url 'home' %}"> Continue Shopping </a>
+</div>
 
 {% endblock %}

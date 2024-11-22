@@ -46,14 +46,14 @@ def checkout(request,item_id):
 
         if address_form.is_valid() and payment_method and form.is_valid():
             address = address_form.save(commit=False)
-            usern = form.save(commit=False)
+            user = form.save(commit=False)
             if user_address:
                 address.id = user_address.id
-                usern.id = username.id
+                user.id = username.id
             address.user = request.user
-            usern.user = request.user
+            user.user = request.user
             address.save()
-            usern.save()
+            user.save()
 
 
             shipping_address = f"{address.street}, {address.purok}, {address.city}, (Landmark: {address.landmark})"

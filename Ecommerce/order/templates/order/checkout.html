@@ -1,38 +1,33 @@
-{% extends 'master.html' %}
-{% load humanize %}
-
+{% extends 'master.html' %} 
+{% load humanize %} 
 {% block content %}
 
-    <div class="home-wrapper">
-        <h2>Checkout - {{ cart_items.product.name }}</h2>
-        <p>Quantity: {{ cart_items.quantity }}</p>
-        <p>Total Price: ₱ {{ total_price | intcomma }}</p>
+<div class="home-wrapper">
+  <h2>Checkout - {{ cart_items.product.name }}</h2>
+  <p>Quantity: {{ cart_items.quantity }}</p>
+  <p>Total Price: ₱ {{ total_price | intcomma }}</p>
 
-        <form method="POST">
-            {% csrf_token %}
-            <h3>Shipping Address</h3>
-            {{ address_form.as_p }}
+  <form method="POST">
+    {% csrf_token %}
+    <h3>Shipping Address</h3>
+    {{ address_form.as_p }}
 
-            <h3>Update Profile</h3>
-            {% for field in form %}
-            {% if field.name != 'image' %}
-                <p>{{ field.label_tag }} {{ field }}</p>
-            {% endif %}
-            {% endfor %}
+    <h3>Update Profile</h3>
+    {% for field in form %} {% if field.name != 'image' %}
+    <p>{{ field.label_tag }} {{ field }}</p>
+    {% endif %} {% endfor %}
 
-            
+    <h3>Payment Method</h3>
+    {% for method in payment_methods %}
+    <label>
+      <input type="radio" value="{{ method }}" name="payment_method" />
+      {{ method }}<br />
+    </label>
+    {% endfor %}
 
-            <h3>Payment Method</h3>
-            {% for method in payment_methods %}
-                <label>
-                    <input type="radio" value="{{ method }}" name="payment_method">
-                    {{ method }}<br>
-                </label>
-            {% endfor %}
+    <button type="submit">Place Order</button>
+  </form>
+  <a href="{% url 'view_cart' %}">Back to Cart</a>
+</div>
 
-            <button type="submit">Place Order</button>
-        </form>
-        <a href="{% url 'view_cart' %}">Back to Cart</a>
-    </div>
-    
 {% endblock %}

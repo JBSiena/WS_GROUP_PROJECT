@@ -1,18 +1,18 @@
-{% load static %}
-
+{% load static %} 
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/register.css' %}">
+<link rel="stylesheet" href="{% static 'css/register.css' %}" />
 <div>
-    <h2>Register</h2>
-    <img src="{% static 'images/image.png' %}" alt="Logo">
+  <h2>Register</h2>
+  <img src="{% static 'images/image.png' %}" alt="Logo" />
 
-    <form method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Register</button>
-    </form>
+  <form method="POST">
+    {% csrf_token %} {{ form.as_p }}
+    <button type="submit">Register</button>
+  </form>
 
-    <p class="login-here">Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+  <p class="login-here">
+    Already have an account? <a href="{% url 'login' %}">Login here</a>
+  </p>
 </div>
 
 {% endblock %}

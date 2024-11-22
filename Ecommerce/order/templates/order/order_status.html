@@ -1,48 +1,56 @@
-{% extends 'master.html' %}
-{% load humanize %}
-
+{% extends 'master.html' %} 
+{% load humanize %} 
 {% block content %}
 
-    <div class="home-wrapper">
-        <h2>Order Status for Order #{{ order.id }}</h2>
+<div class="home-wrapper">
+  <h2>Order Status for Order #{{ order.id }}</h2>
 
-        {% if shipping %}
-            <h3>Shipping Information:</h3>
-            <p><strong>Shipping Status:</strong> {{ shipping.order.status }}</p>
-            <p><strong>Tracking Number:</strong> {{ shipping.tracking_number }}</p>
-            <p><strong>Shipping Method:</strong> {{ shipping.shipping_method }}</p>
-            <p><strong>Payment Method:</strong> {{ order.payment.payment_method }}</p>
-            <p><strong>Payment Status:</strong> {{ order.payment.payment_status }}</p>
-            <p><strong>Delivery Date:</strong> {{ shipping.shipping_date }}</p>
-            <h3>Shipping Address:</h3>
-            <p>{{ shipping_address }}</p>
-            {% if shipping.shipping_status == 'Delivered' %}
-                <p><strong>order has been delivered!</strong></p>
-            {% elif shipping.shipping_status == 'Shipped' %}
-                <p><strong> Your order is on the way! Track it with the tracking number.</strong> </p>
-            {% elif shipping.shipping_status == 'Not Shipped' %}
-                <p><strong> Your order has not been shipped yet. Please check back later.</strong> </p>
-            {% endif %}
-            
-            <h3>Products in this Order:</h3>
-            <ul>
-                {% for item in order_items %}
-                    <li>{{ item.product.name }} - {{ item.quantity }} x ₱ {{ item.total_price | intcomma }} <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}"> </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>No shipping information available for this order yet.</p>
-        {% endif %}
+  {% if shipping %}
+  <h3>Shipping Information:</h3>
+  <p><strong>Shipping Status:</strong> {{ shipping.order.status }}</p>
+  <p><strong>Tracking Number:</strong> {{ shipping.tracking_number }}</p>
+  <p><strong>Shipping Method:</strong> {{ shipping.shipping_method }}</p>
+  <p><strong>Payment Method:</strong> {{ order.payment.payment_method }}</p>
+  <p><strong>Payment Status:</strong> {{ order.payment.payment_status }}</p>
+  <p><strong>Delivery Date:</strong> {{ shipping.shipping_date }}</p>
+  <h3>Shipping Address:</h3>
+  <p>{{ shipping_address }}</p>
+  {% if shipping.shipping_status == 'Delivered' %}
+  <p><strong>order has been delivered!</strong></p>
+  {% elif shipping.shipping_status == 'Shipped' %}
+  <p>
+    <strong>
+      Your order is on the way! Track it with the tracking number.</strong
+    >
+  </p>
+  {% elif shipping.shipping_status == 'Not Shipped' %}
+  <p>
+    <strong>
+      Your order has not been shipped yet. Please check back later.</strong
+    >
+  </p>
+  {% endif %}
 
-        {% if order.status == 'PENDING' %}
-        <form method="POST" action="{% url 'order_summary' order.id %}">
-            {% csrf_token %}
-            <button type="submit" name="cancel_order">Cancel Order</button>
-        </form>
-        {% endif %}
+  <h3>Products in this Order:</h3>
+  <ul>
+    {% for item in order_items %}
+    <li>
+      {{ item.product.name }} - {{ item.quantity }} x ₱ {{ item.total_price |
+      intcomma }}
+      <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" />
+    </li>
+    {% endfor %}
+  </ul>
+  {% else %}
+  <p>No shipping information available for this order yet.</p>
+  {% endif %} {% if order.status == 'PENDING' %}
+  <form method="POST" action="{% url 'order_summary' order.id %}">
+    {% csrf_token %}
+    <button type="submit" name="cancel_order">Cancel Order</button>
+  </form>
+  {% endif %}
 
-        <a href="{% url 'order_list' %}">Back to your Orders</a>
-
-    </div>
+  <a href="{% url 'order_list' %}">Back to your Orders</a>
+</div>
 
 {% endblock %}

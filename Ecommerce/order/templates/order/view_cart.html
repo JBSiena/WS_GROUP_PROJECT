@@ -1,66 +1,63 @@
-{% extends 'master.html' %}
-{% load humanize %}
-
+{% extends 'master.html' %} 
+{% load humanize %} 
 {% block content %}
 
-    <div class="home-wrapper">
-        {% for msg in messages %}
-            <h1 style="color: forestgreen;">{{ msg }}</h1>
-        {% endfor %}
-        <h2>Your Cart</h2>
+<div class="home-wrapper">
+  {% for msg in messages %}
+  <h1 style="color: forestgreen">{{ msg }}</h1>
+  {% endfor %}
+  <h2>Your Cart</h2>
 
-        {% if cart_items %}
-            <table>
-                <thead>
-                    <tr>
-                        <th>Product</th>
-                        <th>Quantity</th>
-                        <th>Price</th>
-                        <th>Total</th>
-                        <th>Remove</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in cart_items %}
-                        <tr>
-                            <td>{{ item.product.name }}</td>
-                            <td>{{ item.quantity }}</td>
-                            <td>₱ {{ item.product.price | intcomma }}</td>
-                            <td>₱ {{ item.total_price | intcomma }}</td>
-                            <td>
-                                <!-- Remove Item Form -->
-                                <form method="POST" action="{% url 'remove_from_cart' item.id %}">
-                                    {% csrf_token %}
-                                    <button type="submit">Remove</button>
-                                </form>
-                            </td>
-                            <td>
-                                <!-- Checkout Single Product Form -->
-                                <form method="POST" action="{% url 'checkout' item.id %}">
-                                    {% csrf_token %}
-                                    <button type="submit">Checkout</button>
-                                </form>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-                
-            </table>
+  {% if cart_items %}
+  <table>
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Price</th>
+        <th>Total</th>
+        <th>Remove</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in cart_items %}
+      <tr>
+        <td>{{ item.product.name }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>₱ {{ item.product.price | intcomma }}</td>
+        <td>₱ {{ item.total_price | intcomma }}</td>
+        <td>
+          <!-- Remove Item Form -->
+          <form method="POST" action="{% url 'remove_from_cart' item.id %}">
+            {% csrf_token %}
+            <button type="submit">Remove</button>
+          </form>
+        </td>
+        <td>
+          <!-- Checkout Single Product Form -->
+          <form method="POST" action="{% url 'checkout' item.id %}">
+            {% csrf_token %}
+            <button type="submit">Checkout</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 
-            <h3>Total Price: ₱ {{ total_price | intcomma }}</h3>
-            <a href="{% url 'order_list' %}">Order List</a><br>
-            <a href="{% url 'home' %}">Continue Shopping</a><br>
-            <a href="{% url 'delivered_items' %}">Delivered Items</a><br>
-            <a href="{% url 'canceled_items' %}">Canceled Items</a> 
-            
-        {% else %}
-            <p>Your cart is empty.</p>
-            <a href="{% url 'order_list' %}">Order List</a><br>
-            <a href="{% url 'home' %}">Continue Shopping</a><br>
-            <a href="{% url 'delivered_items' %}">Delivered Items</a><br>
-            <a href="{% url 'canceled_items' %}">Canceled Items</a>
-        {% endif %}
+  <h3>Total Price: ₱ {{ total_price | intcomma }}</h3>
+  <a href="{% url 'order_list' %}">Order List</a><br />
+  <a href="{% url 'home' %}">Continue Shopping</a><br />
+  <a href="{% url 'delivered_items' %}">Delivered Items</a><br />
+  <a href="{% url 'canceled_items' %}">Canceled Items</a>
 
-    </div>
+  {% else %}
+  <p>Your cart is empty.</p>
+  <a href="{% url 'order_list' %}">Order List</a><br />
+  <a href="{% url 'home' %}">Continue Shopping</a><br />
+  <a href="{% url 'delivered_items' %}">Delivered Items</a><br />
+  <a href="{% url 'canceled_items' %}">Canceled Items</a>
+  {% endif %}
+</div>
 
 {% endblock %}
