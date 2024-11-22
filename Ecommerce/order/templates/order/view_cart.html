@@ -50,13 +50,15 @@
             <h3>Total Price: ₱ {{ total_price | intcomma }}</h3>
             <a href="{% url 'order_list' %}">Order List</a><br>
             <a href="{% url 'home' %}">Continue Shopping</a><br>
-            <a href="{% url 'delivered_items' %}">Delivered Items</a>    
+            <a href="{% url 'delivered_items' %}">Delivered Items</a><br>
+            <a href="{% url 'canceled_items' %}">Canceled Items</a> 
             
         {% else %}
             <p>Your cart is empty.</p>
             <a href="{% url 'order_list' %}">Order List</a><br>
             <a href="{% url 'home' %}">Continue Shopping</a><br>
-            <a href="{% url 'delivered_items' %}">Delivered Items</a>    
+            <a href="{% url 'delivered_items' %}">Delivered Items</a><br>
+            <a href="{% url 'canceled_items' %}">Canceled Items</a>
         {% endif %}
 
     </div>

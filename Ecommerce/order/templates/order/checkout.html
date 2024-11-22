@@ -23,11 +23,12 @@
             
 
             <h3>Payment Method</h3>
-            <select name="payment_method">
-                {% for method in payment_methods %}
-                    <option value="{{ method }}">{{ method }}</option>
-                {% endfor %}
-            </select>
+            {% for method in payment_methods %}
+                <label>
+                    <input type="radio" value="{{ method }}" name="payment_method">
+                    {{ method }}<br>
+                </label>
+            {% endfor %}
 
             <button type="submit">Place Order</button>
         </form>

@@ -34,6 +34,13 @@
             <p>No shipping information available for this order yet.</p>
         {% endif %}
 
+        {% if order.status == 'PENDING' %}
+        <form method="POST" action="{% url 'order_summary' order.id %}">
+            {% csrf_token %}
+            <button type="submit" name="cancel_order">Cancel Order</button>
+        </form>
+        {% endif %}
+
         <a href="{% url 'order_list' %}">Back to your Orders</a>
 
     </div>

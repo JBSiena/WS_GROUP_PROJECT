@@ -23,6 +23,26 @@ class Order(models.Model):
 
     def __str__(self):
         return f"Order #{self.id} - {self.status}"
+    
+    def cancel_order(self):
+        if self.status != Order.CANCELED:
+            # Update order status
+            self.status = Order.CANCELED
+            self.save()
+
+            # Cancel payment if it exists
+            if hasattr(self, 'payment'):
+                self.payment.cancel_payment()
+
+            # Update shipping status if it exists
+            if hasattr(self, 'shipping'):
+                self.shipping.cancel_shipping()
+
+            # Move items to canceled items
+            self.move_to_canceled_items()
+
+            return True  # Indicate success
+        return False  # Already canceled, no changes made
 
     def update_total(self):
         self.total_price = sum(item.total_price() for item in self.items.all())
@@ -78,6 +98,13 @@ class Order(models.Model):
                     price=item.price,
                 )
                 
+    def save(self, *args, **kwargs):
+        # Prevent status changes if the order is already canceled
+        if self.pk and self.status == self.CANCELED:
+            original_status = Order.objects.get(pk=self.pk).status
+            if original_status == self.CANCELED and self.status != self.CANCELED:
+                raise ValueError("Cannot change the status of a canceled order.")
+        super().save(*args, **kwargs)
 
 # OrderItem Model (links Order and Product)
 class OrderItem(models.Model):
@@ -153,7 +180,18 @@ class Payment(models.Model):
 
     def __str__(self):
         return f"Payment for Order #{self.order.id} - {self.payment_status}"
+    
+    def save(self, *args, **kwargs):
+        # Prevent status changes if the payment is failed (after cancellation)
+        if self.pk and self.payment_status == Payment.FAILED:
+            original_status = Payment.objects.get(pk=self.pk).payment_status
+            if original_status == Payment.FAILED and self.payment_status != Payment.FAILED:
+                raise ValueError("Cannot change the status of a failed payment.")
+        super().save(*args, **kwargs)
 
+    def cancel_payment(self):
+        self.payment_status = Payment.FAILED
+        self.save()
 
 
 # Shipping Model
@@ -172,11 +210,11 @@ class Shipping(models.Model):
         today = now().date()
         shipping_date = self.shipping_date.date() if self.shipping_date else None
 
-        if self.shipping_status != Order.CANCELED:
+        if self.order.status != Order.CANCELED:
             if shipping_date <= today:
                 self.shipping_status = 'Delivered'
                 self.order.status = Order.DELIVERED
-            elif today >= shipping_date - timedelta(days=2):
+            elif today >= shipping_date - timedelta(days=3):
                 self.shipping_status = 'Shipped'
                 self.order.status = Order.SHIPPED
             else:
@@ -186,8 +224,20 @@ class Shipping(models.Model):
             self.shipping_status = 'Canceled'
             self.order.status = Order.CANCELED
 
-            self.order.save()
-            self.save()
+        self.order.save()
+        self.save()
+
+    def save(self, *args, **kwargs):
+        # Prevent status changes if the shipping is canceled
+        if self.pk and self.shipping_status == 'Canceled':
+            original_status = Shipping.objects.get(pk=self.pk).shipping_status
+            if original_status == 'Canceled' and self.shipping_status != 'Canceled':
+                raise ValueError("Cannot change the status of a canceled shipping.")
+        super().save(*args, **kwargs)
+
+    def cancel_shipping(self):
+        self.shipping_status = 'Canceled'
+        self.save()
 
 class DeliveredItem(models.Model):
     order = models.ForeignKey(Order, related_name='delivered_items', on_delete=models.CASCADE)

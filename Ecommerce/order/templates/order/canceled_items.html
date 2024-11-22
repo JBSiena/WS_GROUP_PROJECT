@@ -1,0 +1,39 @@
+{% extends 'master.html' %}
+{% load humanize %}
+
+{% block content %}
+
+    <div class="home-wrapper">
+        <h2>Delivered Orders</h2>
+
+        {% if message %}
+            <p>{{ message }}</p>
+        {% else %}
+            {% for order in canceled_orders %}
+                <h3>Order #{{ order.id }} - Status: {{ order.status }}</h3>
+                <p><strong>Total Price:</strong> ₱ {{ order.total_price | intcomma }}</p>
+                <p><strong>Shipping Address:</strong> {{ order.shipping_address }}</p>
+                <h4>Order Items:</h4>
+                <ul>
+                    {% for item in order.items.all %}
+                        <li>
+                            {{ item.product.name }} - {{ item.quantity }} x ₱ {{ item.product.price | intcomma }} = ₱ {{ item.total_price | intcomma }}
+                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                        </li>
+                    {% endfor %}
+                </ul>
+
+                <h5>Shipping Status: {{ order.shipping.shipping_status }}</h5>
+                {% if order.shipping.shipping_status == 'Delivered' %}
+                    <p>Your order has been delivered and is complete!</p>
+                {% else %}
+                    <p>Shipping status: {{ order.shipping.shipping_status }}</p>
+                {% endif %}
+
+                <hr>
+            {% endfor %}
+        {% endif %}
+        <a href="{% url 'home' %}">Continue Shopping</a>
+    </div>
+    
+{% endblock %}

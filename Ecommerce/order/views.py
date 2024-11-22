@@ -127,14 +127,16 @@ def order_summary(request, order_id):
 
     if request.method == 'POST' and 'cancel_order' in request.POST:
         if order.status == Order.PENDING:  # Only allow cancellation for pending orders
-            order.status = Order.CANCELED
-            order.save()
-            messages.success(request, f"Order #{order.id} has been canceled successfully.")
-            return redirect('order_list')  # Redirect to the order list after cancellation
+            if order.cancel_order():
+                messages.success(request, f"Order #{order.id} has been canceled successfully.")
+            else:
+                messages.error(request, "Failed to cancel the order.")
+            return redirect('order_list')
         else:
             messages.error(request, "Order cannot be canceled as it is not in a pending state.")
 
     return render(request, 'order/order_summary.html', {'order': order})
+
 
 @login_required
 def view_cart(request):
@@ -197,7 +199,7 @@ def create_shipping(request, order_id):
 @login_required
 def order_list(request):
     # Get all orders for the logged-in user
-    orders = Order.objects.filter(user=request.user).exclude(status=Order.DELIVERED).order_by('-created_at')
+    orders = Order.objects.filter(user=request.user).exclude(status=Order.DELIVERED and Order.CANCELED).order_by('-created_at')
     product = Product.objects.filter(name__in=orders)
     # Pass the orders to the template
     return render(request, 'order/order_list.html', {
@@ -245,4 +247,11 @@ def delivered_items(request):
     delivered_orders = Order.objects.filter(status=Order.DELIVERED, user=request.user)
     return render(request, 'order/delivered_items.html', {
         'delivered_orders': delivered_orders,
+    })
+
+@login_required
+def canceled_items(request):
+    canceled_orders = Order.objects.filter(status=Order.CANCELED, user=request.user)
+    return render(request, 'order/canceled_items.html', {
+        'canceled_orders': canceled_orders,
     })
