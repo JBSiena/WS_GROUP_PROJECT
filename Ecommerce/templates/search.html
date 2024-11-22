@@ -3,7 +3,7 @@
 <div class="search-wrapper">
 
     <div class="search-field-wrapper">
-        <form method="POST" action="{% url 'search_product' %}">
+        <form method="POST" action="{% url 'search_product' %}" id="search-form">
             {% csrf_token %}
             <input type="search" name="searched" id="search-field">
             <button id="search-button" type="submit"> <i class="fa-solid fa-magnifying-glass"></i> </button>

@@ -8,7 +8,7 @@
   <div class="home-wrapper">
 
     <div class="products">
-        {% if searched != '' %}
+        {% if searched %}
             <h1>Search Results for "{{ searched }}"</h1>
         {% endif %}
         {% if products %}
@@ -29,7 +29,6 @@
                 <h1> No Product Found.... </h1> 
             </div>
         {% endif %}
-
 
     </div>
 

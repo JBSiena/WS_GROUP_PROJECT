@@ -1,0 +1,20 @@
+
+{% extends 'master.html' %}
+{% block content %}
+
+    <div class="home-wrapper">
+
+        <h2>Address</h2>
+
+
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit"> Save </button>
+        </form>
+
+        <p><a href="{% url 'home' %}"> Go Back to Shoppig </a></p>
+
+    </div>
+
+{% endblock %}

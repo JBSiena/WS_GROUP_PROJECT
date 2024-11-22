@@ -8,7 +8,7 @@
 
         {% if shipping %}
             <h3>Shipping Information:</h3>
-            <p><strong>Shipping Status:</strong> {{ shipping.shipping_status }}</p>
+            <p><strong>Shipping Status:</strong> {{ shipping.order.status }}</p>
             <p><strong>Tracking Number:</strong> {{ shipping.tracking_number }}</p>
             <p><strong>Shipping Method:</strong> {{ shipping.shipping_method }}</p>
             <p><strong>Payment Method:</strong> {{ order.payment.payment_method }}</p>
@@ -39,6 +39,3 @@
     </div>
 
 {% endblock %}
-
-    
-    

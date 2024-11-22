@@ -37,6 +37,13 @@
             </tbody>
         </table>
 
+        {% if order.status == 'PENDING' %}
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit" name="cancel_order" class="btn btn-danger">Cancel Order</button>
+        </form>
+        {% endif %}
+    
         <a href="{% url 'order_list' %}">View My Orders</a>
     </div>
 

@@ -26,20 +26,57 @@
           <p>{{ product_detail.name }}</p>
           <p>{{ product_detail.description }}</p>
           <p>₱ {{ product_detail.price | intcomma}}</p>
-          <a href="{% url 'add_to_cart' product_detail.pk %}">Add to Cart</a>
+          <div class="quantity-selector">
+            <button class="quantity-btn" onclick="decreaseQuantity({{ product_detail.pk }})">-</button>
+            <input 
+              id="quantity-{{ product_detail.pk }}" 
+              type="number" 
+              value="1" 
+              min="1" 
+              readonly
+            >
+            <button class="quantity-btn" onclick="increaseQuantity({{ product_detail.pk }})">+</button>
+          </div>
+          <a href="{% url 'add_to_cart' product_detail.pk %}?quantity=1" 
+              id="add-to-cart-{{ product_detail.pk }}"
+              class="add-to-cart-btn">
+            Add to Cart
+          </a>
         </div>
       {% endif %}
 
     </div>
 
-    {% for suggested in selected %}
+    <!-- {% for suggested in selected %}
     <div class="suggestion-wrapper">
       <div class="suggested-product">
         <img src="{{ suggested.image.url }}" alt="{{ suggested.name }}">
         <p> ₱ {{ suggested.price | intcomma }} </p>
       </div>
     </div>
-    {% endfor %}
+    {% endfor %} -->
 
   </div>
+  
+  <script>
+    function increaseQuantity(productId) {
+      const inputField = document.getElementById(`quantity-${productId}`);
+      const addToCartLink = document.getElementById(`add-to-cart-${productId}`);
+      let quantity = parseInt(inputField.value);
+      inputField.value = quantity + 1;
+      addToCartLink.href = `{% url 'add_to_cart' 0 %}`.replace(0, productId) + `?quantity=${quantity + 1}`;
+    }
+  
+    function decreaseQuantity(productId) {
+      const inputField = document.getElementById(`quantity-${productId}`);
+      const addToCartLink = document.getElementById(`add-to-cart-${productId}`);
+      let quantity = parseInt(inputField.value);
+      if (quantity > 1) {
+        inputField.value = quantity - 1;
+        addToCartLink.href = `{% url 'add_to_cart' 0 %}`.replace(0, productId) + `?quantity=${quantity - 1}`;
+      }
+    }
+  
+  </script>
+
 {% endblock %}

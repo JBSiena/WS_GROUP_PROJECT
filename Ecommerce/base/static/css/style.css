@@ -1,5 +1,5 @@
 
-body {
+body{
 
     font-family: 'Inter', 'Inria Serif';
     font-size: 1rem;
@@ -9,6 +9,8 @@ body {
     width: 1920px;
     height: 1080px;
     scroll-behavior: smooth;
+    /* background-color: #9D2323; */
+    
 }
 
 a {
@@ -20,6 +22,7 @@ a {
 .home-wrapper{
     height: 100vh;
     margin-left: 350px;
+    
 }
 
 
