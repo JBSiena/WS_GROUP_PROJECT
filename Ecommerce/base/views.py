@@ -42,12 +42,23 @@ def search_product(request):
 
 # Product Detail
 def product_detail(request, pk):
-    categories = Category.objects.all()
-    product_detail = get_object_or_404(Product, pk=pk)
+    # Fetch the product based on ID
+    product = get_object_or_404(Product, pk=pk)
+
+    if request.method == 'POST':
+        # Handle size selection
+        form = ProductSizeForm(request.POST, product=product)
+        if form.is_valid():
+            selected_size = form.cleaned_data['size']
+            # TODO: Add logic to add product and size to the cart
+            print(f"Selected size: {selected_size}")
+            return redirect('home')  # Redirect after selection
+    else:
+        form = ProductSizeForm(product=product)
 
     return render(request, 'base/product_detail.html', {
-        'categories': categories,
-        'product_detail': product_detail,
+        'product': product,
+        'form': form,
     })
 
 
@@ -88,25 +99,33 @@ def address(request,pk):
 def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
+        address_form = AddressForm(request.POST)
+        if form.is_valid() and address_form.is_valid():
+            user = form.save(commit=False)
+            user.save()    
+            address = address_form.save(commit=False)
+            address.user = user
+            address.save()
+            
             messages.success(request, "Your account has been created!")
-            return redirect('login')  # Redirect to login page after registration
+            return redirect('register')
     else:
         form = CustomUserCreationForm()
+        address_form = AddressForm()
     
-    return render(request, 'base/register.html', {'form': form, 'hide_navbar': True})
+    return render(request, 'base/register.html', {'form': form, 'address_form': address_form,'hide_navbar': True})
+
 
 # Login view
 def user_login(request):
     if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
+        form = UserAuthenticationForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect('home')  # Redirect to home page after login
+            return redirect('home') 
     else:
-        form = AuthenticationForm()
+        form = UserAuthenticationForm()
 
     return render(request, 'base/login.html', {'form': form, 'hide_navbar': True})
 

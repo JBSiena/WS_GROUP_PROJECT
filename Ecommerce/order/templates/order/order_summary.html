@@ -1,10 +1,12 @@
 {% extends 'master.html' %} 
 {% load humanize %} 
+{% load static %}
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/ordersummary.css' %}">
 
-<div class="home-wrapper">
+<div class="order-summary-wrapper">
   {% for msg in messages %}
-  <h1 style="color: forestgreen">{{ msg }}</h1>
+  <h1 class="success-message">{{ msg }}</h1>
   {% endfor %}
   <h2>Order Confirmation</h2>
   <p>Thank you for your order! Your order ID is #{{ order.id }}.</p>
@@ -14,13 +16,14 @@
   <p>Total Price: ₱ {{ order.total_price | intcomma }}</p>
 
   <h3>Order Details:</h3>
-  <table>
+  <table class="order-details">
     <thead>
       <tr>
         <th>Product</th>
         <th>Quantity</th>
         <th>Price</th>
         <th>Total</th>
+        <th>Image</th>
       </tr>
     </thead>
     <tbody>
@@ -30,22 +33,24 @@
         <td>{{ item.quantity }}</td>
         <td>₱ {{ item.product.price | intcomma }}</td>
         <td>₱ {{ item.total_price | intcomma }}</td>
-        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" />
+        <td><img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="product-image" /></td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
 
   {% if order.status == 'PENDING' %}
-  <form method="POST">
+  <form method="POST" class="cancel-order-form">
     {% csrf_token %}
-    <button type="submit" name="cancel_order" class="btn btn-danger">
+    <button type="submit" name="cancel_order" class="cancel-order-btn">
       Cancel Order
     </button>
   </form>
   {% endif %}
 
-  <a href="{% url 'order_list' %}">View My Orders</a>
+  <div class="order-actions">
+    <a href="{% url 'order_list' %}" class="order-list-link">View My Orders</a>
+  </div>
 </div>
 
 {% endblock %}

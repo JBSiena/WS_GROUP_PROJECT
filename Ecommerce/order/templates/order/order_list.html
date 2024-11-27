@@ -1,12 +1,14 @@
 {% extends 'master.html' %} 
 {% load humanize %} 
+{% load static %}
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/orderlist.css' %}">
 
-<div class="home-wrapper">
+<div class="order-list-wrapper">
   <h2>Your Orders</h2>
 
   {% if orders %}
-  <table>
+  <table class="order-list-table">
     <thead>
       <tr>
         <th>Order ID</th>
@@ -24,7 +26,7 @@
         <td>₱ {{ order.total_price | intcomma }}</td>
         <td>{{ order.created_at|date:"Y-m-d H:i" }}</td>
         <td>
-          <a href="{% url 'order_status' order.id %}">View Details</a>
+          <a href="{% url 'order_status' order.id %}" class="view-details-btn">View Details</a>
         </td>
       </tr>
       {% endfor %}
@@ -33,7 +35,8 @@
   {% else %}
   <p>You have no orders yet.</p>
   {% endif %}
-  <a href="{% url 'home' %}"> Continue Shopping </a>
+  <a href="{% url 'view_cart' %}" class="continue-shopping-btn">Back</a>
+  <a href="{% url 'home' %}" class="continue-shopping-btn">Continue Shopping</a>
 </div>
 
 {% endblock %}

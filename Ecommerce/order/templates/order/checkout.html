@@ -1,33 +1,51 @@
-{% extends 'master.html' %} 
-{% load humanize %} 
+{% extends 'master.html' %}
+{% load humanize %}
+{% load static %}
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/checkout.css' %}">
 
-<div class="home-wrapper">
+<div class="checkout-wrapper">
   <h2>Checkout - {{ cart_items.product.name }}</h2>
-  <p>Quantity: {{ cart_items.quantity }}</p>
-  <p>Total Price: ₱ {{ total_price | intcomma }}</p>
+  <p><strong>Quantity:</strong> {{ cart_items.quantity }}</p>
+  <p><strong>Total Price:</strong> ₱ {{ total_price | intcomma }}</p>
 
-  <form method="POST">
+  <form method="POST" class="checkout-form">
     {% csrf_token %}
-    <h3>Shipping Address</h3>
-    {{ address_form.as_p }}
+    <div class="section">
+      <h3>Shipping Address</h3>
+      {{ address_form.as_p }}
+    </div>
 
-    <h3>Update Profile</h3>
-    {% for field in form %} {% if field.name != 'image' %}
-    <p>{{ field.label_tag }} {{ field }}</p>
-    {% endif %} {% endfor %}
+    <div class="section">
+      <h3>Update Profile</h3>
+      {% for field in form %}
+        {% if field.name != 'image' %}
+          <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
 
-    <h3>Payment Method</h3>
-    {% for method in payment_methods %}
-    <label>
-      <input type="radio" value="{{ method }}" name="payment_method" />
-      {{ method }}<br />
-    </label>
-    {% endfor %}
+    <div class="section">
+      <h3>Payment Method</h3>
+      <div class="payment-methods">
+        {% for method in payment_methods %}
+        <label class="payment-option">
+          <input type="radio" value="{{ method }}" name="payment_method" />
+          {{ method }}
+        </label>
+        {% endfor %}
+      </div>
+    </div>
 
-    <button type="submit">Place Order</button>
+    <div class="actions">
+      <button type="submit" class="btn btn-primary">Place Order</button>
+    </div>
   </form>
-  <a href="{% url 'view_cart' %}">Back to Cart</a>
+
+  <a href="{% url 'view_cart' %}" class="btn btn-secondary">Back to Cart</a>
 </div>
 
 {% endblock %}

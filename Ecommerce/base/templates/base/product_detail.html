@@ -3,6 +3,7 @@
 {% block content %} 
 {% include 'search.html' %}
 
+
 <div class="home-wrapper">
   <div class="categories">
     <h3>Categories</h3>
@@ -14,41 +15,48 @@
   </div>
 
   <div class="products">
-    {% if product_detail %}
-    <img src="{{ product_detail.image.url }}" alt="" />
-    <div class="product-description">
-      <p>{{ product_detail.name }}</p>
-      <p>{{ product_detail.description }}</p>
-      <p>₱ {{ product_detail.price | intcomma}}</p>
-      <div class="quantity-selector">
-        <button
-          class="quantity-btn"
-          onclick="decreaseQuantity({{ product_detail.pk }})"
+    {% if product %}
+      <img src="{{ product.category.image.url }}"/>
+      <img src="{{ product.image.url }}" alt="" />
+      <div class="product-description">
+        <p>{{ product.name }}</p>
+        <p>{{ product.description }}</p>
+        <p>₱ {{ product.price | intcomma}}</p>
+        <div class="quantity-selector">
+          <button
+            class="quantity-btn"
+            onclick="decreaseQuantity({{ product.pk }})"
+          >
+            -
+          </button>
+          <input
+            id="quantity-{{ product.pk }}"
+            type="number"
+            value="1"
+            min="1"
+            readonly
+          />
+          <button
+            class="quantity-btn"
+            onclick="increaseQuantity({{ product.pk }})"
+          >
+            +
+          </button>
+        </div>
+        <form method="POST">
+          {% csrf_token %}
+          <label for="id_size">Choose Size:</label>
+          {{ form.size }}
+          <button type="submit" class="btn btn-primary">Add to Cart</button>
+        </form>
+        <a
+          href="{% url 'add_to_cart' product.pk %}?quantity=1"
+          id="add-to-cart-{{ product.pk }}"
+          class="add-to-cart-btn"
         >
-          -
-        </button>
-        <input
-          id="quantity-{{ product_detail.pk }}"
-          type="number"
-          value="1"
-          min="1"
-          readonly
-        />
-        <button
-          class="quantity-btn"
-          onclick="increaseQuantity({{ product_detail.pk }})"
-        >
-          +
-        </button>
+          Add to Cart
+        </a>
       </div>
-      <a
-        href="{% url 'add_to_cart' product_detail.pk %}?quantity=1"
-        id="add-to-cart-{{ product_detail.pk }}"
-        class="add-to-cart-btn"
-      >
-        Add to Cart
-      </a>
-    </div>
     {% endif %}
   </div>
 

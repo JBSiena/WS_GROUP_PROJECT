@@ -6,11 +6,9 @@ body{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    width: 1920px;
-    height: 1080px;
-    scroll-behavior: smooth;
-    /* background-color: #9D2323; */
-    
+    scroll-behavior: smooth;    
+    background-color:  #008080;
+    overflow-x: hidden;
 }
 
 a {
@@ -21,20 +19,10 @@ a {
 
 .home-wrapper{
     height: 100vh;
-    margin-left: 350px;
-    
-}
-
-
-.categories {
-
-    position: absolute;
-    width: 239px;
-    height: 289px;
-    left: 100px;
-    font-family: 'Inter';
-    font-weight: 300;
-
+    margin: 200px 0 0 400px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 50px;
 }
 
 .categories h3{
@@ -44,22 +32,38 @@ a {
 
 }
 
-.products ul{
+.products .info{
+    flex: 1;
+}
+
+.products{
     display: flex;
+    align-items: flex-start;
+    gap: 20px;
     flex-wrap: wrap;
 }
-
-.products li{
-    margin: 50px;
-    list-style: none;
-}
-
 
 .products img{
     width: 300px;
     height: 300px;
     border-radius: 10px;
+    background-color: lightgrey;
 
+}
+
+.products .info button{
+    padding: 10px 10px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.products .info input{
+    width: 10px;
+    height: 30px;
+    border-radius: 5px;
+    border: none;
 }
 
 .products a{
@@ -69,12 +73,7 @@ a {
 }
 
 .product-description{
-
-    position: absolute;
     width: 441px;
-    height: 449px;
-    left: 400px;
-
 }
 
 .suggestion-wrapper{
@@ -107,7 +106,6 @@ a {
 
 }
 
-
 /* END HOME STYLE */
 
 /* NAVIGATION STYLES */
@@ -121,6 +119,10 @@ a {
     top: 0px;
     background: #F0F0F0;   
 }
+
+/* .navigation-bar:hover{
+    transform: translateY(-3px);
+} */
 
 .logo-wrapper{
 
@@ -206,6 +208,11 @@ a {
     margin-left: 10px;
 }
 
+.navigation-content a:hover{
+    color: #3d879d;
+    
+}
+
 .suggestion-content {
 
     position: absolute;
@@ -221,13 +228,7 @@ a {
 /* SEARCH STYLE */
 
 .search-wrapper{
-    
-    position: sticky;
-    width: 1591px;
-    height: 162px;
-    left: 329px;
-    top: 0px;
-    background: #Ffff;
+    background: #00827f ;
 
 }
 
@@ -290,6 +291,10 @@ a {
 
 }
 
+.cart-notif a{
+    color: black;
+}
+
 .login-logout{
 
     position: absolute;
@@ -299,7 +304,6 @@ a {
     top: 80px;
 
 }
-
 
 /* END SEARCH STYLE */
 

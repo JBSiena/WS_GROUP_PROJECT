@@ -1,0 +1,131 @@
+/* Checkout Page Styles */
+.checkout-wrapper {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin: 50px auto;
+    max-width: 1000px;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  p {
+    font-size: 1.1rem;
+    color: #555;
+  }
+  
+  .checkout-form {
+    margin-top: 30px;
+  }
+  
+  .section {
+    margin-bottom: 30px;
+  }
+  
+  h3 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 15px;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .form-group input, .form-group select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+  }
+  
+  .payment-methods {
+    margin-top: 10px;
+  }
+  
+  .payment-option {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+  }
+  
+  .actions {
+    text-align: center;
+  }
+  
+  .btn {
+    padding: 12px 25px;
+    font-size: 1.2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 20px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .btn-primary {
+    background-color: #41b3a3;
+    color: white;
+    border: none;
+  }
+  
+  .btn-primary:hover {
+    background-color: #3d9d8c;
+    transform: translateY(-2px);
+  }
+  
+  .btn-secondary {
+    background-color: #f0f0f0;
+    color: #333;
+    border: 1px solid #ddd;
+    margin-top: 10px;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #ddd;
+    transform: translateY(-2px);
+  }
+  
+  a {
+    text-decoration: none;
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 768px) {
+    .checkout-wrapper {
+      padding: 20px;
+    }
+  
+    .checkout-form {
+      margin-top: 20px;
+    }
+  
+    h3 {
+      font-size: 1.5rem;
+    }
+  
+    .form-group input,
+    .form-group select {
+      padding: 8px;
+      font-size: 1rem;
+    }
+  
+    .btn {
+      padding: 10px 20px;
+      font-size: 1rem;
+    }
+  }
+  

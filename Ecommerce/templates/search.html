@@ -11,8 +11,10 @@
     </div>
     
     <div class="cart-notif">
+        {% if user.is_authenticated %}
         <button> <a href="{% url 'view_cart' %}"> <i class="fa-solid fa-cart-shopping fa-2xl"></i> </a></button>
         <button>  <i class="fa-solid fa-bell fa-2xl"></i> </button>
+        {% endif %}
     </div>
 
     <div class="login-logout">

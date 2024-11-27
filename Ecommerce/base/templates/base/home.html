@@ -1,62 +1,32 @@
-{% extends "master.html" %} 
-{% load humanize %} 
-{% block content %} 
-{% include 'search.html' %}
+{% extends "master.html" %}
+{% load humanize %}
+{% block content %}
 
-<div class="home-wrapper">
-  <div class="products">
-    <ul>
-      {% for product in products %}
-      <li>
-        <div>
-          <a
-            href="{% url 'search_product' %}"
-            class="category-link"
-            value="{{ product.category }}"
-            >{{ product.category }}</a
-          >
-          <h3>{{ product.name }}</h3>
-          <p>₱ {{ product.price | intcomma }}</p>
-          <a href="{% url 'product_detail' product.pk %}"
-            ><img src="{{ product.image.url }}" alt="{{ product.name }}"
-          /></a>
-          <div class="quantity-selector">
-            <button
-              class="quantity-btn"
-              onclick="decreaseQuantity({{ product.pk }})"
-            >
-              -
-            </button>
-            <input
-              id="quantity-{{ product.pk }}"
-              type="number"
-              value="1"
-              min="1"
-              readonly
-            />
-            <button
-              class="quantity-btn"
-              onclick="increaseQuantity({{ product.pk }})"
-            >
-              +
-            </button>
-          </div>
-          <a
-            href="{% url 'add_to_cart' product.pk %}?quantity=1"
-            id="add-to-cart-{{ product.pk }}"
-            class="add-to-cart-btn"
-          >
-            Add to Cart
-          </a>
-        </div>
-      </li>
-      {% endfor %}
-    </ul>
-    <div class="trending">
-      <!-- Additional content here -->
+<section class="home-wrapper">
+  {% for product in products %}
+  <div class="product-card">
+    <div class="logo-cart">
+      <img src="{{ product.category.image.url }}" alt="logo" />
+      <i class="bx bx-shopping-bag"></i>
+    </div>
+    <div class="main-images">
+      <img id="yellow" class="yellow" src="{{ product.image.url }}" alt="blue" />
+    </div>
+    <div class="shoe-details">
+      <span class="shoe_name">{{ product.name }}</span>
+    </div>
+    <div class="color-price">
+      <div class="price">
+        <span class="price_num">${{ product.price | intcomma }}</span>
+      </div>
+    </div>
+    <div class="button">
+      <div class="button-layer"></div>
+      <a href="{% url 'product_detail' product.id %}"><button>Add To Cart</button></a>
     </div>
   </div>
-</div>
+  {% endfor %}
+</section>
 
 <script>
   function increaseQuantity(productId) {
@@ -90,6 +60,7 @@
       document.getElementById("search-form").submit();
     });
   });
+
 </script>
 
 {% endblock %}

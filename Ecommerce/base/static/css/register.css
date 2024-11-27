@@ -7,8 +7,8 @@ body{
 div {
     box-sizing: border-box;
     position: relative;
-    width: 597px;
-    height: 444px;
+    width: 600px;
+    height: 850px;
     background: #F5F5F5;
     border: 1px solid #000000;
     border-radius: 15px;
@@ -47,25 +47,12 @@ input[name='first_name']{
 
 }
 
-input[name='phone']{
-
-    position: absolute;
-    width: 204px;
-    height: 35px;
-    left: 50px;
-    top: 200px;
-    background: #FFFFFF;
-    border: 1px solid #000000;
-    border-radius: 5px;
-
-}
-
 input[name='last_name']{
 
     position: absolute;
     width: 204px;
     height: 35px;
-    left: 50px;
+    left: 330px;
     top: 200px;
     background: #FFFFFF;
     border: 1px solid #000000;
@@ -73,13 +60,26 @@ input[name='last_name']{
 
 }
 
-input[name='email']{
+input[name='username']{
 
     position: absolute;
-    width: 204px;
+    width: 485px;
     height: 35px;
     left: 50px;
-    top: 280px;
+    top: 270px;
+    background: #FFFFFF;
+    border: 1px solid #000000;
+    border-radius: 5px;
+
+}
+
+input[name='street']{
+
+    position: absolute;
+    width: 485px;
+    height: 35px;
+    left: 50px;
+    top: 530px;
     background: #FFFFFF;
     border: 1px solid #000000;
     border-radius: 5px;
@@ -89,10 +89,10 @@ input[name='email']{
 input[name='password1']{
 
     position: absolute;
-    width: 204px;
+    width: 485px;
     height: 35px;
-    left: 330px;
-    top: 200px;
+    left: 50px;
+    top: 600px;
     background: #FFFFFF;
     border: 1px solid #000000;
     border-radius: 5px;
@@ -102,14 +102,56 @@ input[name='password1']{
 input[name='password2']{
 
     position: absolute;
-    width: 204px;
+    width: 485px;
     height: 35px;
-    left: 330px;
-    top: 280px;
+    left: 50px;
+    top: 670px;
     background: #FFFFFF;
     border: 1px solid #000000;
     border-radius: 5px;
+}
+input[name='email']{
+    position: absolute;
+    width: 485px;
+    height: 35px;
+    left: 50px;
+    top: 330px;
+    background: #FFFFFF;
+    border: 1px solid #000000;
+    border-radius: 5px;
+}
 
+input[name='phone']{
+    position: absolute;
+    width: 204px;
+    height: 35px;
+    left: 50px;
+    top: 390px;
+    background: #FFFFFF;
+    border: 1px solid #000000;
+    border-radius: 5px;
+}
+input[name='city']{
+
+    position: absolute;
+    width: 485px;
+    height: 35px;
+    left: 50;
+    top: 460px;
+    background: #FFFFFF;
+    border: 1px solid #000000;
+    border-radius: 5px;
+}
+input[name='postal']{
+
+    position: absolute;
+    width: 204px;
+    height: 35px;
+    left: 330px;
+    top: 390px;
+    background: #FFFFFF;
+    border: 1px solid #000000;
+    border-radius: 5px;
 }
 
 button{
@@ -118,8 +160,8 @@ button{
     width: 204px;
     height: 47px;
     left: 196px;
-    top: 368px;
-    background: #000000;
+    top: 770px;
+    background-color: rgb(32, 101, 128); 
     border-radius: 10px;
     font-family: 'Inter';
     font-style: normal;
@@ -129,13 +171,14 @@ button{
 }
 
 button:hover {
-    background-color: #333;
+    background-color: #333;background-color: #3d879d; 
+    transform: translateY(-3px);
 }
 
 .login-here{
     position: absolute;
-    left: 160px;
-    top: 320px;
+    left: 170px;
+    top: 720px;
     font-family: 'Inter';
 }
 
@@ -199,4 +242,22 @@ label[for='id_password2']{
     font-weight: 300;
     font-size: 1.1rem;
 
+}
+
+p {
+    font-size: 1rem;
+    color: #666;
+    margin-top: 15px;
+  }
+  
+a {
+color: #41b3a3;
+text-decoration: none;
+font-weight: bold;
+transition: color 0.3s ease;
+}
+
+a:hover {
+text-decoration: underline;
+color: #3d9d8c;
 }

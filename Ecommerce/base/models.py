@@ -8,7 +8,7 @@ import random, string
 class CustomUserManagement(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
-            raise ValueError('You did not enter a valid email.')
+            raise ValueError('You did not enter a valid email or username.')
         
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
@@ -29,6 +29,7 @@ class CustomUserManagement(BaseUserManager):
 class Customer(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=50, blank=True)
     last_name = models.CharField(max_length=50, blank=True)
+    username = models.CharField(max_length=50, blank=True, unique=True, null=True)
     phone = models.CharField(max_length=12)
     email = models.EmailField(unique=True)
     image = models.ImageField(upload_to='images/user/', blank=True, default='images/user/dp.png')
@@ -49,23 +50,22 @@ class Address(models.Model):
     user = models.OneToOneField(Customer, on_delete=models.CASCADE)
     street = models.CharField(max_length=100, blank=False)
     city = models.CharField(max_length=100, blank=False)
-    purok = models.CharField(max_length=100, blank=False)
-    landmark = models.TextField(max_length=300, blank=True)
+    postal = models.CharField(max_length=300, blank=True)
 
     def __str__(self):
-        return f'{self.street}, {self.purok}, {self.city}, {self.landmark}'
+        return f'{self.street}, {self.purok}, {self.city}, {self.region}'
 
     
 # Category Model
 class Category(models.Model):
-    name = models.CharField(max_length=100) # Name of the Category
-    
+    name = models.CharField(max_length=100) 
+    image = models.ImageField(upload_to='images/logo', null=True, blank=True)
+
     def __str__(self):
         return self.name
     
     class Meta:
-        verbose_name_plural = 'Categories' # Just to change 'Categorys' to 'Categories' in backend
-
+        verbose_name_plural = 'Categories'
 
 # Product Model
 class Product(models.Model):
@@ -84,3 +84,14 @@ class Product(models.Model):
     def is_in_stock(self):
         return self.stock > 0
     
+# Size
+class Size(models.Model):
+    product = models.ForeignKey(Product, related_name='sizes', on_delete=models.CASCADE)
+    size = models.CharField(max_length=10)
+    stock = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return self.size
+
+    def is_in_stock(self):
+        return self.stock > 0

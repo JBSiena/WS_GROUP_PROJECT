@@ -1,15 +1,36 @@
-{% extends 'master.html' %} 
-{% block content %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <link rel="stylesheet" href="{% static 'css/login.css' %}" />
+  
+  <!-- Page Wrapper with background image -->
+  <div class="page-wrapper">
+    <!-- <img class="banner" src="{% static 'images/banner.png' %}" alt="Banner"> -->
+    <!-- Banner Image as Background -->
+    <div class="banner-container">
 
-<div class="home-wrapper">
-  <h2>Login</h2>
-
-  <form method="POST">
-    {% csrf_token %} {{ form.as_p }}
-    <button type="submit">Login</button>
-  </form>
-
-  <p>Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
-</div>
-
-{% endblock %}
+      
+      <!-- Login Form Inside -->
+      <div class="home-wrapper">
+        <h2>Login</h2>
+        <img src="{% static 'images/image.png' %}" alt="Logo" class="logo" />
+  
+        <form method="POST">
+          {% csrf_token %} 
+          {{ form.as_p }}
+          <button type="submit">Login</button>
+        </form>
+  
+        <p>Don't have an account? <a href="{% url 'register' %}">Register here</a></p>
+        <p>Go back to <a href="{% url 'home' %}">Home</a></p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

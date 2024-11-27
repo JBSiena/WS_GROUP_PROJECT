@@ -137,15 +137,17 @@ class ShoppingCart(models.Model):
 class CartItem(models.Model):
     cart = models.ForeignKey(ShoppingCart, related_name='items', on_delete=models.CASCADE)
     product = models.ForeignKey(Product, related_name='cart_items', on_delete=models.CASCADE)
+    size = models.ForeignKey(Size, related_name='cart_items', on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
 
     def __str__(self):
-        return f"{self.quantity} x {self.product.name}"
+        return f"{self.quantity} x {self.product.name} (Size: {self.size.size})"
 
     def total_price(self):
         quantity = self.quantity if self.quantity is not None else 0
         price = self.product.price if self.product.price is not None else 0
         return quantity * price
+
 
 
 # Payment Model
