@@ -1,5 +1,5 @@
 {% extends "master.html" %} 
-{% load humanize %} 
+{% load humanize %}
 {% block content %} 
 {% include 'search.html' %}
 
@@ -14,51 +14,55 @@
     </ul>
   </div>
 
-  <div class="products">
-    {% if product %}
-      <img src="{{ product.category.image.url }}"/>
-      <img src="{{ product.image.url }}" alt="" />
-      <div class="product-description">
-        <p>{{ product.name }}</p>
-        <p>{{ product.description }}</p>
-        <p>₱ {{ product.price | intcomma}}</p>
-        <div class="quantity-selector">
-          <button
-            class="quantity-btn"
-            onclick="decreaseQuantity({{ product.pk }})"
-          >
-            -
-          </button>
-          <input
-            id="quantity-{{ product.pk }}"
-            type="number"
-            value="1"
-            min="1"
-            readonly
-          />
-          <button
-            class="quantity-btn"
-            onclick="increaseQuantity({{ product.pk }})"
-          >
-            +
-          </button>
-        </div>
-        <form method="POST">
-          {% csrf_token %}
-          <label for="id_size">Choose Size:</label>
-          {{ form.size }}
-          <button type="submit" class="btn btn-primary">Add to Cart</button>
-        </form>
-        <a
-          href="{% url 'add_to_cart' product.pk %}?quantity=1"
-          id="add-to-cart-{{ product.pk }}"
-          class="add-to-cart-btn"
-        >
-          Add to Cart
-        </a>
+
+  {% if product %}
+  <div class="product-card-detail">
+    <div class="logo-cart">
+      <img src="{{ product.category.image.url }}" alt="logo" />
+      <i class="bx bx-shopping-bag"></i>
+    </div>
+    <div class="main-images">
+      <img id="yellow" class="yellow" src="{{ product.image.url }}" alt="blue" />
+    </div>
+    <div class="shoe-details">
+      <span class="shoe_name">{{ product.name }}</span>
+    </div>
+    <div class="color-price">
+      <div class="price">
+        <span class="price_num">${{ product.price | intcomma }}</span>
       </div>
-    {% endif %}
+    </div>
+    <div class="button">
+      <div class="button-layer"></div>
+      <a href="{% url 'add_to_cart' product.pk %}?quantity=1" id="add-to-cart-{{ product.pk }}">
+      <button>Add To Cart</button></a>
+    </div>
+
+      <div class="quantity-selector">
+        <button
+          class="quantity-btn"
+          onclick="decreaseQuantity({{ product.pk }})"
+        >
+          -
+        </button>
+        <input
+          id="quantity-{{ product.pk }}"
+          type="number"
+          value="1"
+          min="1"
+          readonly
+        />
+        <button
+          class="quantity-btn"
+          onclick="increaseQuantity({{ product.pk }})"
+        >
+          +
+        </button>
+      </div>
+    </div>
   </div>
+  {% endif %}
+
 
   <!-- {% for suggested in selected %}
     <div class="suggestion-wrapper">

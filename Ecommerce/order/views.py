@@ -10,18 +10,21 @@ def add_to_cart(request, pk):
     product = get_object_or_404(Product, pk=pk)
     quantity = int(request.GET.get('quantity', 1))
     cart, created = ShoppingCart.objects.get_or_create(user=request.user)
-
-    # Check if the product already exists in the cart
     cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
-    
-    if created:  
-        cart_item.quantity = quantity # If the item is newly created, set the quantity directly
+
+    if created:
+        cart_item.quantity = quantity
     else:
-        cart_item.quantity += quantity  # If it already exists, update the quantity
+        cart_item.quantity += quantity
 
     cart_item.save()
+
+    if request.GET.get('checkout') == 'true':
+        return redirect('checkout', item_id=cart_item.id)
+
     messages.success(request, "Your order has been added successfully to your Cart!")
     return redirect('view_cart')
+
 
 # Checkout View
 @login_required
@@ -32,7 +35,7 @@ def checkout(request,item_id):
         return redirect('view_cart')
 
     cart_items = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
-    total_price = cart_items.total_price()  
+    total_price = cart_items.total_price()
     user_address = Address.objects.filter(user=request.user).first()
     username = Customer.objects.get(id=request.user.id)
 
@@ -116,7 +119,7 @@ def checkout(request,item_id):
         'total_price': total_price,
         'address_form': address_form,
         'form': form,
-        'payment_methods': ['COD', 'PAYPAL', 'PAYMAYA', 'GCASH'],  # Pass payment options to the template
+        'payment_methods': ['COD', 'PAYPAL', 'PAYMAYA', 'GCASH'],
     })
 
 
@@ -150,7 +153,7 @@ def view_cart(request):
 
     return render(request, 'order/view_cart.html', {
         'cart_items': cart_items,
-        'total_price': total_price
+        'total_price': total_price,
     })
 
 @login_required

@@ -3,6 +3,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from .models import *
+from order.models import *
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
@@ -42,23 +43,9 @@ def search_product(request):
 
 # Product Detail
 def product_detail(request, pk):
-    # Fetch the product based on ID
     product = get_object_or_404(Product, pk=pk)
-
-    if request.method == 'POST':
-        # Handle size selection
-        form = ProductSizeForm(request.POST, product=product)
-        if form.is_valid():
-            selected_size = form.cleaned_data['size']
-            # TODO: Add logic to add product and size to the cart
-            print(f"Selected size: {selected_size}")
-            return redirect('home')  # Redirect after selection
-    else:
-        form = ProductSizeForm(product=product)
-
     return render(request, 'base/product_detail.html', {
         'product': product,
-        'form': form,
     })
 
 

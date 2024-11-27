@@ -1,8 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
 
-.product-card {
+.product-card-detail {
   position: relative;
-  max-width: 355px;
+  max-width: 800px;
   width: 100%;
   border-radius: 25px;
   padding: 20px 30px 30px 30px;
@@ -11,30 +11,30 @@
   z-index: 3;
   overflow: hidden;
 }
-.product-card .logo-cart {
+.product-card-detail .logo-cart {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-.product-card .logo-cart img {
+.product-card-detail .logo-cart img {
   height: 50px;
   width: 50px;
   object-fit: contain;
 }
-.product-card .logo-cart i {
+.product-card-detail .logo-cart i {
   font-size: 27px;
   color: #707070;
   cursor: pointer;
   transition: color 0.3s ease;
 }
-.product-card .logo-cart i:hover {
+.product-card-detail .logo-cart i:hover {
   color: #333;
 }
-.product-card .main-images {
+.product-card-detail .main-images {
   position: relative;
   height: 250px;
 }
-.product-card .main-images img {
+.product-card-detail .main-images img {
   position: absolute;
   height: 300px;
   width: 300px;
@@ -44,25 +44,25 @@
   top: -40px;
   transition: 0.5s;
 }
-.product-card .main-images img:hover{
+.product-card-detail .main-images img:hover{
   transform: rotate(25deg) scale(1.1) translate(10px, -20px)
 }
-.product-card .shoe-details .shoe_name {
+.product-card-detail .shoe-details .shoe_name {
   font-size: 24px;
   font-weight: 500;
   color: #161616;
 }
-.product-card .shoe-details p {
+.product-card-detail .shoe-details p {
   font-size: 12px;
   font-weight: 400;
   color: #333;
   text-align: justify;
 }
-.product-card .shoe-details .stars i {
+.product-card-detail .shoe-details .stars i {
   margin: 0 -1px;
   color: #333;
 }
-.product-card .button {
+.product-card-detail .button {
   position: relative;
   height: 50px;
   width: 100%;
@@ -70,7 +70,7 @@
   margin-top: 30px;
   overflow: hidden;
 }
-.product-card .button .button-layer {
+.product-card-detail .button .button-layer {
   position: absolute;
   height: 100%;
   width: 300%;
@@ -79,10 +79,10 @@
   transition: all 0.4s ease;
   border-radius: 25px;
 }
-.product-card .button:hover .button-layer {
+.product-card-detail .button:hover .button-layer {
   left: 0;
 }
-.product-card .button button {
+.product-card-detail .button button {
   position: relative;
   height: 100%;
   width: 100%;
@@ -94,8 +94,4 @@
   letter-spacing: 1px;
   color: #fff;
   cursor: pointer;
-}
-
-.product-card form{
-  height: 100%;
 }

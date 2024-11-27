@@ -83,15 +83,3 @@ class Product(models.Model):
 
     def is_in_stock(self):
         return self.stock > 0
-    
-# Size
-class Size(models.Model):
-    product = models.ForeignKey(Product, related_name='sizes', on_delete=models.CASCADE)
-    size = models.CharField(max_length=10)
-    stock = models.PositiveIntegerField(default=0)
-
-    def __str__(self):
-        return self.size
-
-    def is_in_stock(self):
-        return self.stock > 0

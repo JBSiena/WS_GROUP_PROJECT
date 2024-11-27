@@ -137,7 +137,6 @@ class ShoppingCart(models.Model):
 class CartItem(models.Model):
     cart = models.ForeignKey(ShoppingCart, related_name='items', on_delete=models.CASCADE)
     product = models.ForeignKey(Product, related_name='cart_items', on_delete=models.CASCADE)
-    size = models.ForeignKey(Size, related_name='cart_items', on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
 
     def __str__(self):

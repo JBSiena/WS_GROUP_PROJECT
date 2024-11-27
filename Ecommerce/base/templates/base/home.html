@@ -22,7 +22,15 @@
     </div>
     <div class="button">
       <div class="button-layer"></div>
-      <a href="{% url 'product_detail' product.id %}"><button>Add To Cart</button></a>
+      <a href="{% url 'product_detail' product.id %}">
+        <button>Product Detail</button></a>
+    </div>
+    <div class="button">
+      <form method="POST" action="{% url 'add_to_cart' product.id %}?checkout=true">
+        {% csrf_token %}
+        <div class="button-layer"></div>
+        <button type="submit">Buy Now</button>
+      </form>
     </div>
   </div>
   {% endfor %}

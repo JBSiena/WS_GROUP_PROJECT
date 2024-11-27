@@ -1,28 +1,52 @@
 
-body{
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
+body{
     font-family: 'Inter', 'Inria Serif';
     font-size: 1rem;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
     scroll-behavior: smooth;    
     background-color:  #008080;
     overflow-x: hidden;
+
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 250px 1fr;
+    grid-template-areas:
+        "header header"
+        "sidebar content";
 }
 
 a {
     text-decoration: none;
 }
 
+header {
+    grid-area: header;
+}
+
+aside{
+    grid-area: sidebar;
+}
+
+main{
+    grid-area: content;
+}
+
 /* HOME STYLE */
 
 .home-wrapper{
     height: 100vh;
-    margin: 200px 0 0 400px;
+    margin: 200px 0 0 100px;
     display: flex;
     flex-wrap: wrap;
     gap: 50px;
+    align-items: flex-start;
 }
 
 .categories h3{
@@ -32,49 +56,6 @@ a {
 
 }
 
-.products .info{
-    flex: 1;
-}
-
-.products{
-    display: flex;
-    align-items: flex-start;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.products img{
-    width: 300px;
-    height: 300px;
-    border-radius: 10px;
-    background-color: lightgrey;
-
-}
-
-.products .info button{
-    padding: 10px 10px;
-    margin-right: 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.products .info input{
-    width: 10px;
-    height: 30px;
-    border-radius: 5px;
-    border: none;
-}
-
-.products a{
-
-    color: #b30000;
-
-}
-
-.product-description{
-    width: 441px;
-}
 
 .suggestion-wrapper{
 
@@ -227,23 +208,6 @@ a {
 
 /* SEARCH STYLE */
 
-.search-wrapper{
-    background: #00827f ;
-
-}
-
-.search-wrapper h1{
-
-    position: absolute;
-    left: 150px;
-    top: 40px;
-    font-family: 'Inria Serif';
-    font-weight: 700;
-    font-size: 2.5rem;
-    color: #000000;
-
-}
-
 .search-field-wrapper{
 
     position: absolute;
@@ -254,21 +218,22 @@ a {
 
 }
 
-#search-field{
 
+#search-field{
+    
     width: 721px;
     height: 44px;
 
 }
 
 #search-button {
-
+    
     box-sizing: border-box;
     position: absolute;
     width: 48px;
     height: 44px;
     border: 1px solid #000000;
-
+    
 }
 
 .cart-notif {
@@ -282,21 +247,38 @@ a {
 
 }
 
-.cart-notif button{
 
+.cart-notif button{
+    
     height: 45px;
     width: 45px;
     border: none;
     background: none;
-
+    
 }
 
 .cart-notif a{
     color: black;
 }
 
-.login-logout{
+.cart-notif .cart-counter {
+    position: absolute;
+    bottom: 25px;
+    left: 50px;
+    background-color: red;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
+.login-logout{
+    
     position: absolute;
     width: 158px;
     height: 30px;

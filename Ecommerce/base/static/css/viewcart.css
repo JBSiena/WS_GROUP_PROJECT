@@ -1,14 +1,4 @@
-  /* Cart Page Styling */
-  .home-wrapper {
-    background-color: rgba(255, 255, 255, 0.9); /* Slight white background for the cart */
-    padding: 40px;
-    border-radius: 20px; /* Rounded corners for the whole container */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    max-width: 1200px;
-    margin: 30px auto;
-    text-align: center;
-  }
-  
+
   /* Header Styling */
   .home-wrapper h2 {
     font-size: 2.5rem;
@@ -95,29 +85,6 @@ td img {
   border-radius: 8px;
 }
 
-/* Button Styling */
-button {
-  padding: 10px 15px;
-  background-color: #41b3a3;
-  border: none;
-  border-radius: 5px;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-button:hover {
-  background-color: #3d9d8c;
-  transform: translateY(-2px);
-}
-
-form {
-  display: inline;
-}
-
-form button {
-  margin-top: 5px;
-}
 
 /* Card-Like Product Box for Each Item */
 .product-box {
@@ -143,29 +110,4 @@ form button {
   height: auto;
   border-radius: 8px;
   margin-bottom: 10px;
-}
-
-/* Make it responsive */
-@media (max-width: 768px) {
-  .home-wrapper {
-    padding: 20px;
-  }
-
-  table {
-    font-size: 0.9rem;
-  }
-
-  button {
-    font-size: 1rem;
-    padding: 8px 12px;
-  }
-
-  .product-box {
-    flex-direction: column;
-  }
-
-  /* Adjust image size in table for smaller screens */
-  td img {
-    max-width: 120px; /* Smaller image size for mobile */
-  }
 }

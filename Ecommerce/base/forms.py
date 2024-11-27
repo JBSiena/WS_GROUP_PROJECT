@@ -12,7 +12,7 @@ class CustomUserCreationForm(UserCreationForm):
         'placeholder': 'Last Name',
     }))
     username = forms.CharField(label='', widget=forms.TextInput(attrs={
-        'placeholder': 'User Name',
+        'placeholder': 'Username',
     }), required=False)
     email = forms.EmailField(label='', widget=forms.EmailInput(attrs={
         'placeholder': 'Email',
@@ -51,19 +51,25 @@ class UserAuthenticationForm(AuthenticationForm):
         return user.email 
 
 class EditProfileForm(forms.ModelForm):
-    first_name = forms.CharField(label='First Name',widget=forms.TextInput(attrs={
+    first_name = forms.CharField(label='',widget=forms.TextInput(attrs={
         'placeholder':'First Name',
     }))
-    last_name = forms.CharField(widget=forms.TextInput(attrs={
+    last_name = forms.CharField(label='',widget=forms.TextInput(attrs={
         'placeholder':'Last Name',
     }))
-    phone = forms.CharField(widget=forms.TextInput(attrs={
+    phone = forms.CharField(label='',widget=forms.TextInput(attrs={
         'placeholder':'Phone Number',
+    }))
+    username = forms.CharField(label='',widget=forms.TextInput(attrs={
+        'placeholder':'Username',
+    }))
+    email = forms.CharField(label='',widget=forms.TextInput(attrs={
+        'placeholder':'Email',
     }))
 
     class Meta:
         model = Customer
-        fields = ['first_name', 'last_name', 'phone', 'image']
+        fields = ['first_name', 'last_name', 'username', 'email', 'phone', 'image']
 
 
 class AddressForm(forms.ModelForm):
